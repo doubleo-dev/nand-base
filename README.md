@@ -148,3 +148,40 @@ NAND flash development Git Submodules
     cd "$IDF_PATH/examples/get-started/hello_world/"   # Your actual project location
     idf.py set-target esp32s3
     ```
+
+## Uninstallation
+
+1. Remove Espressif toolchain directory
+
+    **At your own risk:**
+    *if you installed other Espressif toolchains, this may break your setup.*
+
+    ```bash
+    rm -rf ~/.espressif
+    ```
+
+2. Remove Anaconda
+
+    *Reference: https://www.anaconda.com/docs/getting-started/anaconda/uninstall*
+
+    ```bash
+    rm -rf ~/anaconda3
+    rm -rf ~/.condarc ~/.conda ~/.continuum
+    ```
+
+3. Remove export codes from `~/.bashrc`
+
+    **At your own risk.**
+
+    This guide may ahve added the following lines into `.bashrc`:
+
+    * `export RIOTBASE="$HOME/nand-submodules/RIOT"`
+    * `. "$RIOTBASE/dist/tools/esptools/export.sh" esp32s3 > /dev/null`
+    * `. "$HOME/nand-submodules/esp-idf/export.sh" > /dev/null 2>&1`
+    * The lines between `# >>> conta initialize >>>` and `# <<< conda initialize <<<`
+
+4. Remove this repository located at `~/nand-submodules`
+
+    ```bash
+    rm -rf ~/nand-submodules
+    ```
