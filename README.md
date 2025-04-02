@@ -22,7 +22,7 @@ NAND flash development Git Submodules
     echo 'export RIOTBASE="$HOME/nand-submodules/RIOT"' >> ~/.bashrc
     ```
 
-    *After this, restart the shell.*
+    *Restart the shell after this step.*
 
 2. Install required dependencies
 
@@ -46,7 +46,7 @@ NAND flash development Git Submodules
     echo '. "$RIOTBASE/dist/tools/esptools/export.sh" esp32s3 > /dev/null' >> ~/.bashrc
     ```
 
-    *After this, restart the shell.*
+    *Restart the shell after this step.*
 
 ## 3. Anaconda Installation
 
@@ -131,7 +131,7 @@ NAND flash development Git Submodules
     echo '. "$HOME/nand-submodules/esp-idf/export.sh" > /dev/null 2>&1' >> ~/.bashrc
     ```
 
-    *After this, restart the shell.*
+    *Restart the shell after this step.*
 
 7. Install ESP-IDF Python dependencies
 
