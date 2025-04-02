@@ -50,7 +50,43 @@ NAND flash development Git Submodules
     echo '. "$RIOTBASE/dist/tools/esptools/export.sh" esp32s3 > /dev/null' >> ~/.bashrc
     ```
 
-## 3. ESP-IDF Installation
+## 3. Anaconda Installation
+
+1. Download the Anaconda Linux 64-Bit (x86) Installer
+
+    *Download: https://www.anaconda.com/download/success*
+
+2. Make the installer executable
+
+    ```bash
+    chmod +x Anaconda3-VERSION-Linux-x86_64.sh
+    ```
+
+3. Run the installer
+
+    ```bash
+    ./Anaconda3-VERSION-Linux-x86_64.sh
+    ```
+
+    *Enable shell integration when prompted.*
+
+    *Restart the shell after installation.*
+
+4. Create a **Python 3.8** environment named `do-nand`
+
+    *Reference: https://github.com/espressif/esp-idf/blob/master/.mypy.ini*
+
+    ```bash
+    conda create -n do-nand python=3.8
+    ```
+
+5. **(Each time)** Activate the `do-nand` environment
+
+    ```bash
+    conda activate do-nand
+    ```
+
+## 4. ESP-IDF Installation
 
 1. Install required dependencies
 
@@ -82,7 +118,16 @@ NAND flash development Git Submodules
     git submodule update --init --recursive
     ```
 
+5. Install ESP-IDF Python dependencies
+
+    ```bash
+    conda activate do-nand        # Python 3.8 required; Not compatible with Python >= 3.9
+    pip install -r nand-submodules/RIOT/build/pkg/esp32_sdk/requirements.txt
+    ```
+
 5. Install ESP-IDF
+
+    *This may fail if Python != 3.8. In this case, do **Anaconda Installation** above.*
 
     ```bash
     ./install.sh all
