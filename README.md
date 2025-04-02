@@ -22,6 +22,8 @@ NAND flash development Git Submodules
     echo 'export RIOTBASE="$HOME/nand-submodules/RIOT"' >> ~/.bashrc
     ```
 
+    *After this, restart the shell.*
+
 2. Install required dependencies
 
     *Reference: https://doc.riot-os.org/getting-started.html#compiling-riot*
@@ -38,17 +40,13 @@ NAND flash development Git Submodules
     $RIOTBASE/dist/tools/esptools/install.sh esp32s3
     ```
 
-4. (One-time) Export the local toolchain setup script
-
-    ```bash
-    . "$RIOTBASE/dist/tools/esptools/export.sh" esp32s3
-    ```
-
-5. (Permanent) Add the export command to `~/.bashrc`
+4. Add the export command to `~/.bashrc`
 
     ```bash
     echo '. "$RIOTBASE/dist/tools/esptools/export.sh" esp32s3 > /dev/null' >> ~/.bashrc
     ```
+
+    *After this, restart the shell.*
 
 ## 3. Anaconda Installation
 
@@ -118,34 +116,33 @@ NAND flash development Git Submodules
     git submodule update --init --recursive
     ```
 
-5. Install ESP-IDF Python dependencies
-
-    ```bash
-    conda activate do-nand        # Python 3.8 required; Not compatible with Python >= 3.9
-    pip install -r nand-submodules/RIOT/build/pkg/esp32_sdk/requirements.txt
-    ```
-
 5. Install ESP-IDF
 
     *This may fail if Python != 3.8. In this case, do **Anaconda Installation** above.*
 
     ```bash
+    conda activate do-nand        # Python 3.8 required; Not compatible with Python >= 3.9
     ./install.sh all
     ```
 
-6. (One-time) Export the local environment variables setup script
-
-    ```bash
-    . "$HOME/nand-submodules/esp-idf/export.sh"
-    ```
-
-7. (Permanent) Add the export command to `~/.bashrc`
+6. Add the export command to `~/.bashrc`
 
     ```bash
     echo '. "$HOME/nand-submodules/esp-idf/export.sh" > /dev/null 2>&1' >> ~/.bashrc
     ```
 
-8. (Each time) Set the development board target to ESP32-S3 in your project
+    *After this, restart the shell.*
+
+7. Install ESP-IDF Python dependencies
+
+    *This may fail if Python != 3.8. In this case, do **Anaconda Installation** above.*
+
+    ```bash
+    conda activate do-nand        # Python 3.8 required; Not compatible with Python >= 3.9
+    pip install -r ~/nand-submodules/RIOT/build/pkg/esp32_sdk/requirements.txt
+    ```
+
+8. **(Each time)** Set the development board target to ESP32-S3 in your project
 
     ```bash
     cd "$IDF_PATH/examples/get-started/hello_world/"   # Your actual project location
