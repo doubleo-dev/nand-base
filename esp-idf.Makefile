@@ -16,3 +16,14 @@ PKG_SOURCE_DIR          ?= $(PKGDIRBASE)/esp32_sdk
 PKG_BUILD_OUT_OF_SOURCE ?= 1
 
 include $(PKG_DIR)/Makefile
+
+# Apply the additional patches locally:
+#
+#   Fix broken rtc_io.h declaration and prevent sys/uio.h inclusion outside RIOT
+#
+# Forwarded           https://github.com/RIOT-OS/RIOT/pull/21408
+# Patch location      ~/nand-submodules/esp-idf.patches/*.patch
+LOCAL_ESP_IDF_PATCHES   = $(wildcard ~/nand-submodules/esp-idf.patches/*.patch)
+
+all:
+	cd $(PKG_SOURCE_DIR); git am $(LOCAL_ESP_IDF_PATCHES)
