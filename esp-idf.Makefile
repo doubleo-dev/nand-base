@@ -17,13 +17,10 @@ PKG_BUILD_OUT_OF_SOURCE ?= 1
 
 include $(PKG_DIR)/Makefile
 
-# Apply the additional patches locally:
-#
-#   Fix broken rtc_io.h declaration and prevent sys/uio.h inclusion outside RIOT
-#
-# Forwarded             https://github.com/RIOT-OS/RIOT/pull/21408
-# Patch location        ~/nand-submodules/esp-idf.patches/*.patch
+# Apply the additional patches locally if exist
 LOCAL_ESP_IDF_PATCHES   = $(wildcard ~/nand-submodules/esp-idf.patches/*.patch)
 
 all:
+ifneq ($(strip $(LOCAL_ESP_IDF_PATCHES)),)
 	cd $(PKG_SOURCE_DIR); git am $(LOCAL_ESP_IDF_PATCHES)
+endif
