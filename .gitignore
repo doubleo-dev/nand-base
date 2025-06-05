@@ -29,6 +29,7 @@ tags
 !.vscode/launch.json
 !.vscode/extensions.json
 !.vscode/*.code-snippets
+!.vscode/*_properties.json.template
 
 # Local History for Visual Studio Code
 .history/
