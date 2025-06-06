@@ -78,7 +78,14 @@ NAND flash development Git Submodules
     conda create -n do-nand python=3.8
     ```
 
-5. **(Each time)** Activate the `do-nand` environment
+5. Install RIOT OS Python dependencies
+
+    ```bash
+    conda activate do-nand
+    pip install psutil
+    ```
+
+6. **(Each time)** Activate the `do-nand` environment
 
     ```bash
     conda activate do-nand
