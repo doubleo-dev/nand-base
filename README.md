@@ -70,25 +70,25 @@ NAND flash development Git Submodules - RIOT based
 
     *Restart the shell after installation.*
 
-4. Create a **Python 3.8** environment named `do-nand`
+4. Create a **Python 3.8** environment named `do-nand-riot`
 
     *Reference: https://github.com/espressif/esp-idf/blob/master/.mypy.ini*
 
     ```bash
-    conda create -n do-nand python=3.8
+    conda create -n do-nand-riot python=3.8
     ```
 
 5. Install RIOT OS Python dependencies
 
     ```bash
-    conda activate do-nand
+    conda activate do-nand-riot
     pip install psutil
     ```
 
-6. **(Each time)** Activate the `do-nand` environment
+6. **(Each time)** Activate the `do-nand-riot` environment
 
     ```bash
-    conda activate do-nand
+    conda activate do-nand-riot
     ```
 
 ## 4. ESP-IDF Installation
@@ -128,7 +128,7 @@ NAND flash development Git Submodules - RIOT based
     *This may fail if Python != 3.8. In this case, do **Anaconda Installation** above.*
 
     ```bash
-    conda activate do-nand        # Python 3.8 required; Not compatible with Python >= 3.9
+    conda activate do-nand-riot        # Python 3.8 required; Not compatible with Python >= 3.9
     ./install.sh all
     ```
 
@@ -145,7 +145,7 @@ NAND flash development Git Submodules - RIOT based
     *This may fail if Python != 3.8. In this case, do **Anaconda Installation** above.*
 
     ```bash
-    conda activate do-nand        # Python 3.8 required; Not compatible with Python >= 3.9
+    conda activate do-nand-riot        # Python 3.8 required; Not compatible with Python >= 3.9
     pip install -r ~/nand-base-riot/RIOT/build/pkg/esp32_sdk/requirements.txt
     ```
 
