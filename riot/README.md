@@ -40,7 +40,15 @@ NAND flash development Git Submodules - RIOT based
 
 ### 1. RIOT OS Installation
 
-1. Install required dependencies
+1. Set `RIOTBASE` to the `RIOT/` submodule in this repository
+
+    ```bash
+    echo 'export RIOTBASE="$HOME/nand-base/riot/RIOT"' >> ~/.bashrc
+    ```
+
+    *Restart the shell after this step.*
+
+2. Install required dependencies
 
     *Reference: https://doc.riot-os.org/getting-started.html#compiling-riot*
 
@@ -48,7 +56,7 @@ NAND flash development Git Submodules - RIOT based
     sudo apt install git gcc-arm-none-eabi make gcc-multilib libstdc++-arm-none-eabi-newlib openocd gdb-multiarch doxygen wget unzip python3-serial
     ```
 
-2. Install the local toolchain for ESP32-S3
+3. Install the local toolchain for ESP32-S3
 
     *Reference: https://doc.riot-os.org/group__cpu__esp32.html#esp32_local_toolchain_installation*
 
@@ -56,7 +64,7 @@ NAND flash development Git Submodules - RIOT based
     $RIOTBASE/dist/tools/esptools/install.sh esp32s3
     ```
 
-3. Add the export command to `~/.bashrc`
+4. Add the export command to `~/.bashrc`
 
     ```bash
     echo '. "$RIOTBASE/dist/tools/esptools/export.sh" esp32s3 > /dev/null' >> ~/.bashrc
@@ -64,7 +72,7 @@ NAND flash development Git Submodules - RIOT based
 
     *Restart the shell after this step.*
 
-## 2. Anaconda Installation
+### 2. Anaconda Installation
 
 1. Download the Anaconda Linux 64-Bit (x86) Installer
 
@@ -139,7 +147,15 @@ NAND flash development Git Submodules - RIOT based
     git submodule update --init --recursive
     ```
 
-5. Install ESP-IDF
+5. Set the desired ESP-IDF tools path to `~/.bashrc`
+
+    ```bash
+    echo 'export IDF_TOOLS_PATH="~/nand-base/riot/.espressif"' >> ~/.bashrc
+    ```
+
+    *Restart the shell after this step.*
+
+6. Install ESP-IDF
 
     *This may fail if Python != 3.8. In this case, do **Anaconda Installation** above.*
 
@@ -148,7 +164,7 @@ NAND flash development Git Submodules - RIOT based
     ./install.sh all
     ```
 
-6. Add the export command to `~/.bashrc`
+7. Add the export command to `~/.bashrc`
 
     ```bash
     echo '. "$HOME/nand-base/riot/esp-idf/export.sh" > /dev/null 2>&1' >> ~/.bashrc
@@ -156,7 +172,7 @@ NAND flash development Git Submodules - RIOT based
 
     *Restart the shell after this step.*
 
-7. Install ESP-IDF Python dependencies
+8. Install ESP-IDF Python dependencies
 
     *This may fail if Python != 3.8. In this case, do **Anaconda Installation** above.*
 
@@ -165,7 +181,7 @@ NAND flash development Git Submodules - RIOT based
     pip install -r ~/nand-base/riot/RIOT/build/pkg/esp32_sdk/requirements.txt
     ```
 
-8. **(Each time)** Set the development board target to ESP32-S3 in your project
+9. **(Each time)** Set the development board target to ESP32-S3 in your project
 
     ```bash
     cd "$IDF_PATH/examples/get-started/hello_world/"   # Your actual project location
@@ -199,6 +215,8 @@ NAND flash development Git Submodules - RIOT based
     This guide may ahve added the following lines into `.bashrc`:
 
     * `export PATH="~/nand-base/bin:$PATH"`
+    * `export RIOTBASE="$HOME/nand-base/riot/RIOT"`
+    * `export IDF_TOOLS_PATH="~/nand-base/riot/.espressif"`
     * `. "$RIOTBASE/dist/tools/esptools/export.sh" esp32s3 > /dev/null`
     * `. "$HOME/nand-base/riot/esp-idf/export.sh" > /dev/null 2>&1`
     * The lines between `# >>> conta initialize >>>` and `# <<< conda initialize <<<`
