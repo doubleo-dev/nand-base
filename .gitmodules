@@ -1,4 +1,4 @@
 [submodule "RIOT"]
-	path = RIOT
+	path = riot/RIOT
 	url = https://github.com/RIOT-OS/RIOT.git
 	branch = 2025.04-branch
