@@ -1,3 +1,14 @@
+# Exclude ESP-IDF tools installation path
+/esp/.espressif
+/riot/.espressif
+
+# Exclude flag files
+/.deps-installed
+/esp/.deps-installed
+/riot/.deps-installed
+/.ignore-export
+
+
 # Created by https://www.toptal.com/developers/gitignore/api/visualstudiocode,vim,linux,macos,windows
 # Edit at https://www.toptal.com/developers/gitignore?templates=visualstudiocode,vim,linux,macos,windows
 

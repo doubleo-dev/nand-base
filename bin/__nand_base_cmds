@@ -1,0 +1,834 @@
+#!/bin/sh
+
+export SHELL_NAME="$(ps -p $$ -o comm=)"
+export SHELL_RUNNER="$0"
+export SHELL_PARAMS="$@"
+export SHELL_DIR="$(dirname $SHELL_RUNNER)"
+
+export NANDBASE_CMD="$(basename $SHELL_RUNNER)"
+export NANDBASE_GIT='https://github.com/doubleo-dev/nand-base.git'
+export NANDBASE_ROOT="$HOME/nand-base"
+
+export CONDA_INSTALLER_PATH="$NANDBASE_ROOT/Anaconda3-Linux-x86_64.sh"
+export CONDA_PAGE_URL='https://www.anaconda.com/download/success'
+export CONDA_LATEST_URL_REGEX='https://repo.anaconda.com/archive/Anaconda3-[^"]*-Linux-x86_64.sh'
+
+export FLAG_DEPS_COMMON="$NANDBASE_ROOT/.deps-installed"
+export FLAG_SHELL_EXPORT="$NANDBASE_ROOT/.ignore-export"
+
+prompt_boolean() {
+  # Prompt for input in a Linux shell script - https://stackoverflow.com/a/226724
+  __prompt="$1"
+  while true; do
+    echo -n "$__prompt ('yes' or 'no') : "
+    read __answer
+    case "$__answer" in
+      [YyTt1]* ) return 0;;     # yes, true
+      [NnFf0]* ) return 255;;   # no, false
+      * ) echo "ERROR: Please answer 'yes' or 'no'.";;
+    esac
+  done
+}
+
+is_sourced() {
+  # Detect if a script is being sourced - https://stackoverflow.com/a/28776166
+  if [ -n "$ZSH_VERSION" ]; then
+    case "$ZSH_EVAL_CONTEXT" in *:file:*) return 0;; esac                     # sourced
+  else  # add additional POSIX-compatible shell names here
+    case "${0##*/}" in dash|-dash|bash|-bash|ksh|-ksh|sh|-sh) return 0;; esac # sourced
+  fi
+
+  return 255                                                                  # not sourced
+}
+
+count_missing_submodules() {
+  __count=0
+  while read -r __line; do
+    case "$__line" in -*) __count=$((__count + 1));; esac
+  done
+  echo "$__count"   # print a number of missing submodules to stdout
+  return $__count
+}
+
+is_dir_in_path() {
+  __expected_dir="$1"
+  case ":$PATH:" in *:$__expected_dir:*) return 0;; esac  # found in path
+  return 255                                              # not in path
+}
+
+conda_find_env() {
+  __env_name="$1"
+  if conda env list 2> /dev/null | awk '{print $1}' | grep -x "$__env_name" > /dev/null; then
+    return 0  # success
+  fi
+
+  return 255  # failure
+}
+
+conda_get_latest_url() {
+  # print url to stdout
+  curl "$CONDA_PAGE_URL" 2>/dev/null | grep -o '' | head -n1
+  return $?
+}
+
+conda_download_latest() {
+  __conda_url="$1"        # download from url
+  __conda_installer="$2"  # download to file
+  curl -L "$__conda_url" -o "$__conda_installer"
+  return $?
+}
+
+check_deps() {
+  if ! is_sourced; then
+    echo 'ERROR: The script was executed directly, not sourced. Please run using "source" or "." (a single dot).'
+    echo ''
+    echo "    expected: source $SHELL_RUNNER"
+    echo "              . $SHELL_RUNNER"
+    echo "         got: $SHELL_RUNNER $SHELL_PARAMS"
+    echo ''
+    echo '        hint: Re-run this script with following commands:'
+    echo ''
+    echo "              . $SHELL_RUNNER  (Note the leading dot and the required space)"
+    echo ''
+    return 11
+  fi
+
+  if ! is_dir_in_path "$SHELL_DIR"; then
+    if [ ! -f "$FLAG_SHELL_EXPORT" ]; then
+      echo 'INFO: This script directory is not in your shell $PATH.'
+      echo '      It is strongly recommended to add it, to run this script from anywhere.'
+      echo ''
+      echo "         got: $SHELL_DIR"
+      echo ''
+      echo '        hint: Add the following line to your shell rc file:'
+      echo ''
+      echo "              echo 'export PATH=\"$NANDBASE_ROOT/bin:\$PATH\"' >> ~/.${SHELL_NAME}rc"
+      echo ''
+      echo '        note: To ignore this message, run the following commands:'
+      echo ''
+      echo "              touch $FLAG_SHELL_EXPORT"
+      echo ''
+    fi
+  fi
+
+  if [ ! -f "$FLAG_DEPS_COMMON" ]; then
+    if ! prompt_boolean 'PROMPT: The common dependencies not installed. Install now?'; then
+      echo 'ERROR: The common dependencies not installed.'
+      echo ''
+      echo "    expected: $FLAG_DEPS_COMMON"
+      echo '         got: (flag file does not exist at the expected path)'
+      echo ''
+      echo '        hint: Re-run this script with following commands:'
+      echo ''
+      echo "              . $SHELL_RUNNER"
+      echo ''
+      echo '         cmd: sudo apt install git'
+      echo "              touch $FLAG_DEPS_COMMON"
+      echo ''
+      return 12
+    fi
+
+    sudo apt install git
+    if [ $? -ne 0 ]; then
+      echo 'ERROR: An error occurred during installing the dependencies.'
+      echo ''
+      echo '        hint: Check the error messages above.'
+      echo '              You should install the dependencies manually:'
+      echo ''
+      echo '              sudo apt install git'
+      echo "              touch $FLAG_DEPS_COMMON"
+      echo ''
+      return 13
+    fi
+
+    touch $FLAG_DEPS_COMMON
+    if [ $? -ne 0 ]; then
+      echo 'WARNING: Cannot create to the dependency installation flag file.'
+      echo ''
+      echo '        hint: Check the error messages above.'
+      echo '              You should create the flag file manually:'
+      echo ''
+      echo "              touch $FLAG_DEPS_COMMON"
+      echo ''
+    fi
+  fi
+
+  __expected_git_path="$NANDBASE_ROOT/.git"
+  if [ ! -d "$__expected_git_path" ]; then
+
+    if ! prompt_boolean 'PROMPT: The NAND flash development base is missing. Download now?'; then
+      echo 'ERROR: The NAND flash development base is missing. Please clone it with Git.'
+      echo ''
+      echo "    expected: $__expected_git_path"
+      echo '         got: (directory does not exist at the expected path)'
+      echo ''
+      echo '        hint: Re-run this script with following commands:'
+      echo ''
+      echo "              . $SHELL_RUNNER"
+      echo ''
+      echo "         cmd: git clone --recursive $NANDBASE_GIT $NANDBASE_ROOT"
+      echo ''
+      return 14
+    fi
+
+    git clone --recursive "$NANDBASE_GIT" "$NANDBASE_ROOT"
+    if [ $? -ne 0 ]; then
+      echo 'ERROR: Failed to clone the NAND flash development base.'
+      echo ''
+      echo '        hint: Check the error messages above.'
+      echo '              You should clone it with Git manually:'
+      echo ''
+      echo "              git clone --recursive $NANDBASE_GIT $NANDBASE_ROOT"
+      echo ''
+      return 15
+    fi
+
+    echo 'INFO: NAND flash development base downloaded completed. Please re-run this script at the correct location.'
+    echo ''
+    echo '        hint: Re-run this script with following commands:'
+    echo ''
+    echo "              . $NANDBASE_ROOT/bin/$NANDBASE_CMD"
+    echo ''
+    return 16
+  fi
+
+  which conda > /dev/null 2>&1
+  if [ $? -ne 0 ]; then
+
+    if ! prompt_boolean "PROMPT: Anaconda is missing. Download now?"; then
+      echo 'ERROR: Anaconda is not installed. Please install it.'
+      echo ''
+      echo "        hint: 1. Visit     $CONDA_PAGE_URL"
+      echo '              2. Open      "Distribution Installers"'
+      echo '              3. Download  "Linux 64-Bit (x86) Installer"'
+      echo '              4. Open a terminal and run the following commands:'
+      echo ''
+      echo '              chmod +x Anaconda3-$VERSION-Linux-x86_64.sh'
+      echo '              ./Anaconda3-$VERSION-Linux-x86_64.sh'
+      echo ''
+      echo '              5. Follow the installer prompts. Enable shell integration when prompted.'
+      echo '              6. Restart the terminal.'
+      echo ''
+      return 17
+    fi
+
+    __conda_url="$(conda_get_latest_url)"
+    __retcode=$?
+    if [ $__retcode -eq 0 ]; then
+      echo "INFO: Downloading Anaconda installer from $__conda_url"
+      conda_download_latest "$__conda_url" "$CONDA_INSTALLER_PATH"
+      __retcode=$?
+    fi
+
+    if [ $__retcode -ne 0 ]; then
+      echo 'ERROR: Failed to download Anaconda. Please download manually.'
+      echo ''
+      echo '        hint: 1. Check your Internet connection.'
+      echo "              2. Visit     $CONDA_PAGE_URL"
+      echo '              3. Open      "Distribution Installers"'
+      echo '              4. Download  "Linux 64-Bit (x86) Installer"'
+      echo '              5. Open a terminal and run the following commands:'
+      echo ''
+      echo '              chmod +x Anaconda3-$VERSION-Linux-x86_64.sh'
+      echo '              ./Anaconda3-$VERSION-Linux-x86_64.sh'
+      echo ''
+      echo '              6. Follow the installer prompts. Enable shell integration when prompted.'
+      echo '              7. Restart the terminal.'
+      echo ''
+      return 18
+    fi
+
+    echo "INFO: Anaconda installer downloaded to $CONDA_INSTALLER_PATH"
+    echo 'INFO: Running Anaconda installer. Please follow the prompts. Enable shell integration when prompted.'
+    chmod +x "$CONDA_INSTALLER_PATH"
+    "$CONDA_INSTALLER_PATH"
+    if [ $? -ne 0 ]; then
+      echo 'ERROR: Anaconda installation failed.'
+      echo ''
+      echo '        hint: Check the error messages above.'
+      echo '              You should run the downloaded Anaconda installer manually:'
+      echo ''
+      echo "              $CONDA_INSTALLER_PATH"
+      echo ''
+      echo '        note: Follow the installer prompts. Enable shell integration when prompted.'
+      echo '              After installation, restart the terminal.'
+      echo ''
+      return 19
+    fi
+
+    echo 'INFO: Anaconda installation completed.'
+  fi
+
+  return 0
+}
+
+check_deps_riot() {
+  if [ ! -f "$FLAG_DEPS_RIOT" ]; then
+    if ! prompt_boolean "PROMPT: The '$NANDBASE' dependencies not installed. Install now?"; then
+      echo "ERROR: The '$NANDBASE' dependencies not installed."
+      echo ''
+      echo "    expected: $FLAG_DEPS_RIOT"
+      echo '         got: (flag file does not exist at the expected path)'
+      echo ''
+      echo '        hint: Re-run this script with following commands:'
+      echo ''
+      echo "              . $SHELL_RUNNER"
+      echo ''
+      echo '         cmd: sudo apt install wget flex bison gperf python3 python3-pip \'
+      echo '                               python3-setuptools cmake ninja-build ccache libffi-dev \'
+      echo '                               libssl-dev dfu-util libusb-1.0-0 python3-virtualenv'
+      echo "              touch $FLAG_DEPS_RIOT"
+      echo ''
+      return 31
+    fi
+
+    sudo apt install wget flex bison gperf python3 python3-pip \
+                     python3-setuptools cmake ninja-build ccache libffi-dev \
+                     libssl-dev dfu-util libusb-1.0-0 python3-virtualenv
+    if [ $? -ne 0 ]; then
+      echo 'ERROR: An error occurred during installing the dependencies.'
+      echo ''
+      echo '        hint: Check the error messages above.'
+      echo '              You should install the dependencies manually:'
+      echo ''
+      echo '              sudo apt install wget flex bison gperf python3 python3-pip \'
+      echo '                               python3-setuptools cmake ninja-build ccache libffi-dev \'
+      echo '                               libssl-dev dfu-util libusb-1.0-0 python3-virtualenv'
+      echo "              touch $FLAG_DEPS_RIOT"
+      echo ''
+      return 32
+    fi
+
+    touch $FLAG_DEPS_RIOT
+    if [ $? -ne 0 ]; then
+      echo 'WARNING: Cannot create to the dependency installation flag file.'
+      echo ''
+      echo '        hint: Check the error messages above.'
+      echo '              You should create the flag file manually:'
+      echo ''
+      echo "              touch $FLAG_DEPS_RIOT"
+      echo ''
+    fi
+  fi
+
+  if [ ! -d "$RIOTBASE" ]; then
+
+    if ! prompt_boolean 'PROMPT: RIOT OS base submodule is missing. Download now?'; then
+      echo 'ERROR: Failed to load the RIOT OS base submodule.'
+      echo ''
+      echo "    expected: $RIOTBASE"
+      echo '         got: (directory does not exist at the expected path)'
+      echo ''
+      echo '        hint: Re-run this script with following commands:'
+      echo ''
+      echo "              . $SHELL_RUNNER"
+      echo ''
+      echo "         cmd: cd $NANDBASE_ROOT"
+      echo '              git submodule update --init --recursive'
+      echo ''
+      return 33
+    fi
+
+    pushd "$NANDBASE_ROOT"
+    git submodule update --init --recursive
+    __retcode=$?
+    popd
+
+    if [ $__retcode -ne 0 ]; then
+      echo 'ERROR: An error occurred while downloading the RIOT OS base submodule.'
+      echo ''
+      echo '        hint: Check the error messages above.'
+      echo '              You should download the RIOT OS base submodule manually:'
+      echo ''
+      echo "              cd $NANDBASE_ROOT"
+      echo '              git submodule update --init --recursive'
+      echo ''
+      return 34
+    fi
+
+    echo 'INFO: RIOT OS base submodule download completed.'
+  fi
+
+  if [ ! -d "$IDF_PATH" ]; then
+
+    if ! prompt_boolean 'PROMPT: RIOT OS patched ESP-IDF is not installed. Install?'; then
+      echo 'ERROR: RIOT OS patched ESP-IDF is not installed properly.'
+      echo ''
+      echo "    expected: $IDF_PATH"
+      echo '         got: (directory does not exist at the expected path)'
+      echo ''
+      echo '        hint: Re-run this script with following commands:'
+      echo ''
+      echo "              . $SHELL_RUNNER"
+      echo ''
+      echo "         cmd: make -f $NANDBASE_PATH/esp-idf.Makefile"
+      echo ''
+      return 35
+    fi
+
+    make -f $NANDBASE_PATH/esp-idf.Makefile
+
+    if [ $? -ne 0 ]; then
+      echo 'ERROR: An error occurred during installing RIOT OS patched ESP-IDF.'
+      echo ''
+      echo '        hint: Check the error messages above.'
+      echo '              You should install the RIOT OS patched ESP-IDF manually:'
+      echo ''
+      echo "              make -f $NANDBASE_PATH/esp-idf.Makefile"
+      echo ''
+      return 36
+    fi
+
+    echo 'INFO: RIOT OS patched ESP-IDF installation completed.'
+  fi
+
+  pushd "$IDF_PATH" > /dev/null 2>&1
+  __missing_submodules_count="$(git submodule status | count_missing_submodules)"
+  popd > /dev/null 2>&1
+  if [ "$__missing_submodules_count" != "0" ]; then
+
+    if ! prompt_boolean 'PROMPT: RIOT OS patched ESP-IDF submodules not loaded. Download now?'; then
+      echo 'ERROR: RIOT OS patched ESP-IDF submodules were not fully loaded.'
+      echo ''
+      echo '    expected: 0'
+      echo "         got: $__missing_submodules_count (number of missing submodules)"
+      echo ''
+      echo '        hint: Re-run this script with following commands:'
+      echo ''
+      echo "              . $SHELL_RUNNER"
+      echo ''
+      echo "         cmd: cd $IDF_PATH"
+      echo '              git submodule update --init --recursive'
+      echo ''
+      return 37
+    fi
+
+    pushd "$IDF_PATH"
+    git submodule update --init --recursive
+    __retcode=$?
+    popd
+
+    if [ $__retcode -ne 0 ]; then
+      echo 'ERROR: An error occurred during downloading the RIOT OS patched ESP-IDF submodules.'
+      echo ''
+      echo '        hint: Check the error messages above.'
+      echo '              You should download the submodules manually:'
+      echo ''
+      echo "              cd $IDF_PATH"
+      echo '              git submodule update --init --recursive'
+      echo ''
+      return 38
+    fi
+
+    echo "INFO: RIOT OS patched ESP-IDF submodules have been loaded."
+  fi
+
+  conda_find_env "$CONDA_ENV_NAME"
+  if [ $? -ne 0 ]; then
+
+    if ! prompt_boolean "PROMPT: Anaconda environment '$CONDA_ENV_NAME' not created. Create?"; then
+      echo 'ERROR: Anaconda environment '$CONDA_ENV_NAME' not created.'
+      echo ''
+      echo '        hint: Re-run this script with following commands:'
+      echo ''
+      echo "              . $SHELL_RUNNER"
+      echo ''
+      echo "         cmd: conda create -n $CONDA_ENV_NAME python=3.8"
+      echo "              conda activate $CONDA_ENV_NAME"
+      echo '              pip install psutil'
+      echo ''
+      return 39
+    fi
+
+    conda create -n "$CONDA_ENV_NAME" python=3.8
+
+    if [ $? -ne 0 ]; then
+      echo "ERROR: Anaconda environment '$CONDA_ENV_NAME' creation failed."
+      echo ''
+      echo '        hint: Check the error messages above.'
+      echo '              You should create the environment manually:'
+      echo ''
+      echo "              conda create -n $CONDA_ENV_NAME python=3.8"
+      echo "              conda activate $CONDA_ENV_NAME"
+      echo '              pip install psutil'
+      echo ''
+      return 40
+    fi
+
+    echo "INFO: Anaconda environment '$CONDA_ENV_NAME' has been created."
+
+    pip install psutil
+
+    if [ $? -ne 0 ]; then
+      echo "WARNING: Python dependency 'psutil' installation failed."
+      echo ''
+      echo '        hint: Check the error messages above.'
+      echo '              You must install the Python dependencies manually:'
+      echo ''
+      echo "              conda activate $CONDA_ENV_NAME"
+      echo '              pip install psutil'
+      echo ''
+      echo '        note: This warning will not appear again.'
+      echo '              Stopping here. After installing, re-run this script with following commands:'
+      echo ''
+      echo "              . $SHELL_RUNNER"
+      echo ''
+      return 41
+    fi
+  fi
+
+  __expected_idf_tools_path="$IDF_TOOLS_PATH/idf-env.json"
+  if [ ! -f "$__expected_idf_tools_path" ]; then
+
+    if ! prompt_boolean "PROMPT: ESP-IDF tools are not installed. Install?"; then
+      echo 'ERROR: ESP-IDF tools are not installed.'
+      echo ''
+      echo "    expected: $__expected_idf_tools_path"
+      echo '         got: (directory does not exist at the expected path)'
+      echo ''
+      echo '        hint: Re-run this script with following commands:'
+      echo ''
+      echo "              . $SHELL_RUNNER"
+      echo ''
+      echo "         cmd: export IDF_PATH='$IDF_PATH'"
+      echo "              export IDF_TOOLS_PATH='$IDF_TOOLS_PATH'"
+      echo "              conda activate '$CONDA_ENV_NAME'"
+      echo "              cd '$IDF_PATH'"
+      echo '              ./install.sh all'
+      echo ''
+      return 42
+    fi
+
+    activate_conda || return $?
+
+    pushd "$IDF_PATH"
+    ./install.sh all
+    __retcode=$?
+    popd
+
+    if [ $__retcode -ne 0 ]; then
+      echo 'ERROR: An error occurred during installing the ESP-IDF tools.'
+      echo ''
+      echo '        hint: Check the error messages above.'
+      echo '              You should install the ESP-IDF tools manually:'
+      echo ''
+      echo "              export IDF_PATH=$IDF_PATH"
+      echo "              export IDF_TOOLS_PATH=$IDF_TOOLS_PATH"
+      echo "              conda activate '$CONDA_ENV_NAME'"
+      echo "              cd $IDF_PATH"
+      echo '              ./install.sh all'
+      echo ''
+      return 43
+    fi
+
+    echo "INFO: ESP-IDF tools installation completed."
+  fi
+
+  return 0
+}
+
+check_deps_esp() {
+  if [ ! -f "$FLAG_DEPS_ESP" ]; then
+    if ! prompt_boolean "PROMPT: The '$NANDBASE' dependencies not installed. Install now?"; then
+      echo "ERROR: The '$NANDBASE' dependencies not installed."
+      echo ''
+      echo "    expected: $FLAG_DEPS_ESP"
+      echo '         got: (flag file does not exist at the expected path)'
+      echo ''
+      echo '        hint: Re-run this script with following commands:'
+      echo ''
+      echo "              . $SHELL_RUNNER"
+      echo ''
+      echo '         cmd: sudo apt install wget flex bison gperf python3 python3-pip python3-venv \'
+      echo '                               cmake ninja-build ccache libffi-dev libssl-dev dfu-util \'
+      echo '                               libusb-1.0-0'
+      echo "              touch $FLAG_DEPS_ESP"
+      echo ''
+      return 61
+    fi
+
+    sudo apt install wget flex bison gperf python3 python3-pip python3-venv \
+                     cmake ninja-build ccache libffi-dev libssl-dev dfu-util \
+                     libusb-1.0-0
+    if [ $? -ne 0 ]; then
+      echo 'ERROR: An error occurred during installing the dependencies.'
+      echo ''
+      echo '        hint: Check the error messages above.'
+      echo '              You should install the dependencies manually:'
+      echo ''
+      echo '              sudo apt install wget flex bison gperf python3 python3-pip python3-venv \'
+      echo '                               cmake ninja-build ccache libffi-dev libssl-dev dfu-util \'
+      echo '                               libusb-1.0-0'
+      echo "              touch $FLAG_DEPS_ESP"
+      echo ''
+      return 62
+    fi
+
+    touch $FLAG_DEPS_ESP
+    if [ $? -ne 0 ]; then
+      echo 'WARNING: Cannot create to the dependency installation flag file.'
+      echo ''
+      echo '        hint: Check the error messages above.'
+      echo '              You should create the flag file manually:'
+      echo ''
+      echo "              touch $FLAG_DEPS_ESP"
+      echo ''
+    fi
+  fi
+
+  if [ ! -d "$IDF_PATH" ]; then
+
+    if ! prompt_boolean "PROMPT: ESP-IDF base submodule is missing. Download now?"; then
+      echo 'ERROR: Failed to load the ESP-IDF base submodule.'
+      echo ''
+      echo "    expected: $IDF_PATH"
+      echo '         got: (directory does not exist at the expected path)'
+      echo ''
+      echo '        hint: Re-run this script with following commands:'
+      echo ''
+      echo "              . $SHELL_RUNNER"
+      echo ''
+      echo "         cmd: cd $NANDBASE_ROOT"
+      echo '              git submodule update --init --recursive'
+      echo ''
+      return 63
+    fi
+
+    pushd "$NANDBASE_ROOT"
+    git submodule update --init --recursive
+    __retcode=$?
+    popd
+
+    if [ $__retcode -ne 0 ]; then
+      echo 'ERROR: An error occurred while downloading the ESP-IDF base submodule.'
+      echo ''
+      echo '        hint: Check the error messages above.'
+      echo '              You should download the ESP-IDF base submodule manually:'
+      echo ''
+      echo "              cd $NANDBASE_ROOT"
+      echo '              git submodule update --init --recursive'
+      echo ''
+      return 64
+    fi
+
+    echo "INFO: ESP-IDF base submodule download completed."
+  fi
+
+  pushd "$IDF_PATH" > /dev/null 2>&1
+  __missing_submodules_count="$(git submodule status | count_missing_submodules)"
+  popd > /dev/null 2>&1
+  if [ "$__missing_submodules_count" != "0" ]; then
+
+    if ! prompt_boolean 'PROMPT: ESP-IDF submodules not loaded. Download now?'; then
+      echo 'ERROR: ESP-IDF submodules were not fully loaded.'
+      echo ''
+      echo '    expected: 0'
+      echo "         got: $__missing_submodules_count (number of missing submodules)"
+      echo ''
+      echo '        hint: Re-run this script with following commands:'
+      echo ''
+      echo "              . $SHELL_RUNNER"
+      echo ''
+      echo "         cmd: cd $IDF_PATH"
+      echo '              git submodule update --init --recursive'
+      echo ''
+      return 65
+    fi
+
+    pushd "$IDF_PATH"
+    git submodule update --init --recursive
+    __retcode=$?
+    popd
+
+    if [ $__retcode -ne 0 ]; then
+      echo 'ERROR: An error occurred during downloading the ESP-IDF submodules.'
+      echo ''
+      echo '        hint: Check the error messages above.'
+      echo '              You should download the submodules manually:'
+      echo ''
+      echo "              cd $IDF_PATH"
+      echo '              git submodule update --init --recursive'
+      echo ''
+      return 38
+    fi
+
+    echo "INFO: ESP-IDF submodules have been loaded."
+  fi
+
+  conda_find_env "$CONDA_ENV_NAME"
+  if [ $? -ne 0 ]; then
+
+    if ! prompt_boolean "PROMPT: Anaconda environment '$CONDA_ENV_NAME' not created. Create?"; then
+      echo 'ERROR: Anaconda environment '$CONDA_ENV_NAME' not created.'
+      echo ''
+      echo '        hint: Re-run this script with following commands:'
+      echo ''
+      echo "              . $SHELL_RUNNER"
+      echo ''
+      echo "         cmd: conda create -n $CONDA_ENV_NAME python=3.11"
+      echo ''
+      return 68
+    fi
+
+    conda create -n "$CONDA_ENV_NAME" python=3.11
+
+    if [ $? -ne 0 ]; then
+      echo "ERROR: Anaconda environment '$CONDA_ENV_NAME' creation failed."
+      echo ''
+      echo '        hint: Check the error messages above.'
+      echo '              You should create the environment manually:'
+      echo ''
+      echo "              conda create -n $CONDA_ENV_NAME python=3.11"
+      echo ''
+      return 69
+    fi
+
+    echo "INFO: Anaconda environment '$CONDA_ENV_NAME' has been created."
+  fi
+
+  __expected_idf_tools_path="$IDF_TOOLS_PATH/idf-env.json"
+  if [ ! -f "$__expected_idf_tools_path" ]; then
+
+    if ! prompt_boolean "PROMPT: ESP-IDF tools are not installed. Install?"; then
+      echo 'ERROR: ESP-IDF tools are not installed.'
+      echo ''
+      echo "    expected: $__expected_idf_tools_path"
+      echo '         got: (directory does not exist at the expected path)'
+      echo ''
+      echo '        hint: Re-run this script with following commands:'
+      echo ''
+      echo "              . $SHELL_RUNNER"
+      echo ''
+      echo "         cmd: export IDF_PATH='$IDF_PATH'"
+      echo "              export IDF_TOOLS_PATH='$IDF_TOOLS_PATH'"
+      echo "              conda activate '$CONDA_ENV_NAME'"
+      echo "              cd '$IDF_PATH'"
+      echo '              ./install.sh all'
+      echo ''
+      return 66
+    fi
+
+    activate_conda || return $?
+
+    pushd "$IDF_PATH"
+    ./install.sh all
+    __retcode=$?
+    popd
+
+    if [ $__retcode -ne 0 ]; then
+      echo 'ERROR: An error occurred during installing the ESP-IDF.'
+      echo ''
+      echo '        hint: Check the error messages above.'
+      echo '              You should install the ESP-IDF tools manually:'
+      echo ''
+      echo "              export IDF_PATH=$IDF_PATH"
+      echo "              export IDF_TOOLS_PATH=$IDF_TOOLS_PATH"
+      echo "              conda activate '$CONDA_ENV_NAME'"
+      echo "              cd $IDF_PATH"
+      echo '              ./install.sh all'
+      echo ''
+      return 67
+    fi
+
+    echo "INFO: ESP-IDF tools installation completed."
+  fi
+
+  return 0
+}
+
+activate_conda() {
+  __env_name="do-nand-$NANDBASE"
+  eval "$(conda shell.$SHELL_NAME hook)"
+  conda activate "$__env_name"
+  if [ $? -ne 0 ]; then
+    echo 'ERROR: Failed to activate Anaconda environment.'
+    echo ''
+    echo '        hint: Check the error messages above.'
+    echo '              You should verify if the environment can be activated manually:'
+    echo ''
+    echo "              conda activate '$__env_name'"
+    echo ''
+    echo '              Ensure that the environment can be activated, then re-run this script with following commands:'
+    echo ''
+    echo "              . $SHELL_RUNNER"
+    echo ''
+    return 91
+  fi
+
+  echo "INFO: Anaconda environment '$__env_name' has been activated."
+  return 0
+}
+
+activate_nand_riot () {
+  if [ -f "$RIOTBASE/dist/tools/esptools/export.sh" ]; then
+    . "$RIOTBASE/dist/tools/esptools/export.sh" esp32s3 > /dev/null
+  fi
+
+  if [ -f "$IDF_PATH/export.sh" ]; then
+    . "$IDF_PATH/export.sh" > /dev/null 2>&1
+  fi
+
+  echo "INFO: '$NANDBASE' activated. To deactivate: exit and restart the shell."
+  return 0
+}
+
+activate_nand_esp() {
+  if [ -f "$IDF_PATH/export.sh" ]; then
+    . "$IDF_PATH/export.sh" > /dev/null 2>&1
+  fi
+
+  echo "INFO: '$NANDBASE' activated. To deactivate: exit and restart the shell."
+  return 0
+}
+
+# Step 1: Verify required dependencies
+check_deps || return $?
+
+# Step 2: Validate the provided command
+case "$NANDBASE_CMD" in
+  'activate-nand-riot' | 'anr' | \
+  'activate-nand-esp' | 'ane') ;;
+  *)
+    echo 'ERROR: The command is not supported.'
+    echo ''
+    echo '    expected: activate-nand-riot \t(= anr)'
+    echo '              activate-nand-esp  \t(= ane)'
+    echo "         got: $NANDBASE_CMD      \t(ran by $SHELL_RUNNER $SHELL_PARAMS)"
+    echo ''
+    return 101
+    ;;
+esac
+
+# Step 3: Set the env paths
+case "$NANDBASE_CMD" in
+  'activate-nand-riot' | 'anr')
+    export NANDBASE='riot'
+    export NANDBASE_PATH="$NANDBASE_ROOT/$NANDBASE"
+    export RIOTBASE="$NANDBASE_PATH/RIOT"
+    export IDF_PATH="$NANDBASE_PATH/esp-idf"
+    export IDF_TOOLS_PATH="$NANDBASE_PATH/.espressif"
+    export CONDA_ENV_NAME="do-nand-$NANDBASE"
+    export FLAG_DEPS_RIOT="$NANDBASE_PATH/.deps-installed"
+    ;;
+  'activate-nand-esp' | 'ane')
+    export NANDBASE='esp'
+    export NANDBASE_PATH="$NANDBASE_ROOT/$NANDBASE"
+    export IDF_PATH="$NANDBASE_PATH/esp-idf"
+    export IDF_TOOLS_PATH="$NANDBASE_PATH/.espressif"
+    export CONDA_ENV_NAME="do-nand-$NANDBASE"
+    export FLAG_DEPS_ESP="$NANDBASE_PATH/.deps-installed"
+    ;;
+esac
+
+# Step 4: Execute the appropriate command
+case "$NANDBASE_CMD" in
+  'activate-nand-riot' | 'anr')
+    activate_conda || return $?
+    check_deps_riot || return $?
+    activate_nand_riot || return $?
+    ;;
+  'activate-nand-esp' | 'ane')
+    check_deps_esp || return $?
+    activate_nand_esp || return $?
+    ;;
+esac
