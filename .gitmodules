@@ -2,3 +2,6 @@
 	path = riot/RIOT
 	url = https://github.com/RIOT-OS/RIOT.git
 	branch = 2025.04-branch
+[submodule "esp-idf"]
+	path = esp/esp-idf
+	url = https://github.com/espressif/esp-idf.git
