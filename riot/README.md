@@ -6,25 +6,41 @@ NAND flash development Git Submodules - RIOT based
 * MCU: ESP32-S3
 * PC: Debian GNU/Linux "sid"
 
-## 1. Base Installation
+## 1. Auto Installation and Configuration
 
-1. Clone this repository to `~/nand-base-riot`
+1. Clone this repository to `~/nand-base`
 
     ```bash
-    git clone --recursive https://github.com/doubleo-dev/nand-base-riot.git ~/nand-base-riot
+    git clone --recursive https://github.com/doubleo-dev/nand-base.git ~/nand-base
     ```
 
-## 2. RIOT OS Installation
-
-1. Set `RIOTBASE` to the `RIOT/` submodule in this repository
+2. Set the environmental variables
 
     ```bash
-    echo 'export RIOTBASE="$HOME/nand-base-riot/RIOT"' >> ~/.bashrc
+    echo 'export PATH="~/nand-base/bin:$PATH"' >> ~/.bashrc
     ```
 
     *Restart the shell after this step.*
 
-2. Install required dependencies
+3. **(Each time)** Run the command to activate the RIOT base
+
+    ```bash
+    . activate-nand-riot
+    ```
+
+    or
+
+    ```bash
+    . anr
+    ```
+
+## 2. Manual Installation
+
+***Not recommended.** Please follow above **Auto Installation and Configuration**.*
+
+### 1. RIOT OS Installation
+
+1. Install required dependencies
 
     *Reference: https://doc.riot-os.org/getting-started.html#compiling-riot*
 
@@ -32,7 +48,7 @@ NAND flash development Git Submodules - RIOT based
     sudo apt install git gcc-arm-none-eabi make gcc-multilib libstdc++-arm-none-eabi-newlib openocd gdb-multiarch doxygen wget unzip python3-serial
     ```
 
-3. Install the local toolchain for ESP32-S3
+2. Install the local toolchain for ESP32-S3
 
     *Reference: https://doc.riot-os.org/group__cpu__esp32.html#esp32_local_toolchain_installation*
 
@@ -40,7 +56,7 @@ NAND flash development Git Submodules - RIOT based
     $RIOTBASE/dist/tools/esptools/install.sh esp32s3
     ```
 
-4. Add the export command to `~/.bashrc`
+3. Add the export command to `~/.bashrc`
 
     ```bash
     echo '. "$RIOTBASE/dist/tools/esptools/export.sh" esp32s3 > /dev/null' >> ~/.bashrc
@@ -48,7 +64,7 @@ NAND flash development Git Submodules - RIOT based
 
     *Restart the shell after this step.*
 
-## 3. Anaconda Installation
+## 2. Anaconda Installation
 
 1. Download the Anaconda Linux 64-Bit (x86) Installer
 
@@ -91,7 +107,7 @@ NAND flash development Git Submodules - RIOT based
     conda activate do-nand-riot
     ```
 
-## 4. ESP-IDF Installation
+## 3. ESP-IDF Installation
 
 1. Install required dependencies
 
@@ -108,13 +124,13 @@ NAND flash development Git Submodules - RIOT based
     *Reference: https://github.com/RIOT-OS/RIOT/tree/master/pkg/esp32_sdk*
 
     ```bash
-    make -f ~/nand-base-riot/esp-idf.Makefile
+    make -f ~/nand-base/riot/esp-idf.Makefile
     ```
 
 3. Navigate to the `esp-idf/` directory
 
     ```bash
-    cd ~/nand-base-riot/esp-idf
+    cd ~/nand-base/riot/esp-idf
     ```
 
 4. Download ESP-IDF submodules recursively
@@ -135,7 +151,7 @@ NAND flash development Git Submodules - RIOT based
 6. Add the export command to `~/.bashrc`
 
     ```bash
-    echo '. "$HOME/nand-base-riot/esp-idf/export.sh" > /dev/null 2>&1' >> ~/.bashrc
+    echo '. "$HOME/nand-base/riot/esp-idf/export.sh" > /dev/null 2>&1' >> ~/.bashrc
     ```
 
     *Restart the shell after this step.*
@@ -146,7 +162,7 @@ NAND flash development Git Submodules - RIOT based
 
     ```bash
     conda activate do-nand-riot        # Python 3.8 required; Not compatible with Python >= 3.9
-    pip install -r ~/nand-base-riot/RIOT/build/pkg/esp32_sdk/requirements.txt
+    pip install -r ~/nand-base/riot/RIOT/build/pkg/esp32_sdk/requirements.txt
     ```
 
 8. **(Each time)** Set the development board target to ESP32-S3 in your project
@@ -164,7 +180,7 @@ NAND flash development Git Submodules - RIOT based
     *if you installed other Espressif toolchains, this may break your setup.*
 
     ```bash
-    rm -rf ~/.espressif
+    rm -rf ~/nand-base/riot/.espressif
     ```
 
 2. Remove Anaconda
@@ -182,13 +198,15 @@ NAND flash development Git Submodules - RIOT based
 
     This guide may ahve added the following lines into `.bashrc`:
 
-    * `export RIOTBASE="$HOME/nand-base-riot/RIOT"`
+    * `export PATH="~/nand-base/bin:$PATH"`
     * `. "$RIOTBASE/dist/tools/esptools/export.sh" esp32s3 > /dev/null`
-    * `. "$HOME/nand-base-riot/esp-idf/export.sh" > /dev/null 2>&1`
+    * `. "$HOME/nand-base/riot/esp-idf/export.sh" > /dev/null 2>&1`
     * The lines between `# >>> conta initialize >>>` and `# <<< conda initialize <<<`
 
-4. Remove this repository located at `~/nand-base-riot`
+4. Remove this repository located at `~/nand-base`
+
+    **This will remove all other NAND flash development bases.**
 
     ```bash
-    rm -rf ~/nand-base-riot
+    rm -rf ~/nand-base
     ```
