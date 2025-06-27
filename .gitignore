@@ -8,6 +8,9 @@
 /riot/.deps-installed
 /.ignore-export
 
+# Exclude downloaded files
+/Anaconda3-Linux-x86_64.sh
+
 
 # Created by https://www.toptal.com/developers/gitignore/api/visualstudiocode,vim,linux,macos,windows
 # Edit at https://www.toptal.com/developers/gitignore?templates=visualstudiocode,vim,linux,macos,windows
