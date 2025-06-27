@@ -67,7 +67,7 @@ conda_find_env() {
 
 conda_get_latest_url() {
   # print url to stdout
-  curl "$CONDA_PAGE_URL" 2>/dev/null | grep -o '' | head -n1
+  curl "$CONDA_PAGE_URL" 2>/dev/null | grep -o "$CONDA_LATEST_URL_REGEX" | head -n1
   return $?
 }
 
