@@ -279,7 +279,7 @@ check_deps_riot() {
       echo '                               libssl-dev dfu-util libusb-1.0-0 python3-virtualenv'
       echo "              touch $FLAG_DEPS_RIOT"
       echo ''
-      return 31
+      return 41
     fi
 
     sudo apt install wget flex bison gperf python3 python3-pip \
@@ -296,7 +296,7 @@ check_deps_riot() {
       echo '                               libssl-dev dfu-util libusb-1.0-0 python3-virtualenv'
       echo "              touch $FLAG_DEPS_RIOT"
       echo ''
-      return 32
+      return 42
     fi
 
     touch $FLAG_DEPS_RIOT
@@ -326,7 +326,7 @@ check_deps_riot() {
       echo "         cmd: cd $NANDBASE_ROOT"
       echo "              git submodule update --init --recursive $RIOTBASE"
       echo ''
-      return 33
+      return 43
     fi
 
     pushd "$NANDBASE_ROOT"
@@ -343,7 +343,7 @@ check_deps_riot() {
       echo "              cd $NANDBASE_ROOT"
       echo "              git submodule update --init --recursive $RIOTBASE"
       echo ''
-      return 34
+      return 44
     fi
 
     echo 'INFO: RIOT OS base submodule download completed.'
@@ -363,7 +363,7 @@ check_deps_riot() {
       echo ''
       echo "         cmd: make -f $NANDBASE_PATH/esp-idf.Makefile"
       echo ''
-      return 35
+      return 45
     fi
 
     make -f $NANDBASE_PATH/esp-idf.Makefile
@@ -376,7 +376,7 @@ check_deps_riot() {
       echo ''
       echo "              make -f $NANDBASE_PATH/esp-idf.Makefile"
       echo ''
-      return 36
+      return 46
     fi
 
     echo 'INFO: RIOT OS patched ESP-IDF installation completed.'
@@ -400,7 +400,7 @@ check_deps_riot() {
       echo "         cmd: cd $IDF_PATH"
       echo "              git submodule update --init --recursive $IDF_PATH"
       echo ''
-      return 37
+      return 47
     fi
 
     pushd "$IDF_PATH"
@@ -417,7 +417,7 @@ check_deps_riot() {
       echo "              cd $IDF_PATH"
       echo "              git submodule update --init --recursive $IDF_PATH"
       echo ''
-      return 38
+      return 48
     fi
 
     echo "INFO: RIOT OS patched ESP-IDF submodules have been loaded."
@@ -437,7 +437,7 @@ check_deps_riot() {
       echo "              conda activate $CONDA_ENV_NAME"
       echo '              pip install psutil'
       echo ''
-      return 39
+      return 49
     fi
 
     conda create -n "$CONDA_ENV_NAME" python=3.8
@@ -452,7 +452,7 @@ check_deps_riot() {
       echo "              conda activate $CONDA_ENV_NAME"
       echo '              pip install psutil'
       echo ''
-      return 40
+      return 50
     fi
 
     echo "INFO: Anaconda environment '$CONDA_ENV_NAME' has been created."
@@ -473,7 +473,7 @@ check_deps_riot() {
       echo ''
       echo "              . $SHELL_RUNNER"
       echo ''
-      return 41
+      return 51
     fi
   fi
 
@@ -496,7 +496,7 @@ check_deps_riot() {
       echo "              cd '$IDF_PATH'"
       echo '              ./install.sh all'
       echo ''
-      return 42
+      return 52
     fi
 
     activate_conda || return $?
@@ -518,7 +518,7 @@ check_deps_riot() {
       echo "              cd $IDF_PATH"
       echo '              ./install.sh all'
       echo ''
-      return 43
+      return 53
     fi
 
     echo "INFO: ESP-IDF tools installation completed."
@@ -544,7 +544,7 @@ check_deps_esp() {
       echo '                               libusb-1.0-0'
       echo "              touch $FLAG_DEPS_ESP"
       echo ''
-      return 61
+      return 71
     fi
 
     sudo apt install wget flex bison gperf python3 python3-pip python3-venv \
@@ -561,7 +561,7 @@ check_deps_esp() {
       echo '                               libusb-1.0-0'
       echo "              touch $FLAG_DEPS_ESP"
       echo ''
-      return 62
+      return 72
     fi
 
     touch $FLAG_DEPS_ESP
@@ -591,7 +591,7 @@ check_deps_esp() {
       echo "         cmd: cd $NANDBASE_ROOT"
       echo "              git submodule update --init --recursive $IDF_PATH"
       echo ''
-      return 63
+      return 73
     fi
 
     pushd "$NANDBASE_ROOT"
@@ -608,7 +608,7 @@ check_deps_esp() {
       echo "              cd $NANDBASE_ROOT"
       echo "              git submodule update --init --recursive $IDF_PATH"
       echo ''
-      return 64
+      return 74
     fi
 
     echo "INFO: ESP-IDF base submodule download completed."
@@ -632,7 +632,7 @@ check_deps_esp() {
       echo "         cmd: cd $IDF_PATH"
       echo "              git submodule update --init --recursive $IDF_PATH"
       echo ''
-      return 65
+      return 75
     fi
 
     pushd "$IDF_PATH"
@@ -649,7 +649,7 @@ check_deps_esp() {
       echo "              cd $IDF_PATH"
       echo "              git submodule update --init --recursive $IDF_PATH"
       echo ''
-      return 38
+      return 76
     fi
 
     echo "INFO: ESP-IDF submodules have been loaded."
@@ -667,7 +667,7 @@ check_deps_esp() {
       echo ''
       echo "         cmd: conda create -n $CONDA_ENV_NAME python=3.11"
       echo ''
-      return 68
+      return 77
     fi
 
     conda create -n "$CONDA_ENV_NAME" python=3.11
@@ -680,7 +680,7 @@ check_deps_esp() {
       echo ''
       echo "              conda create -n $CONDA_ENV_NAME python=3.11"
       echo ''
-      return 69
+      return 78
     fi
 
     echo "INFO: Anaconda environment '$CONDA_ENV_NAME' has been created."
@@ -705,7 +705,7 @@ check_deps_esp() {
       echo "              cd '$IDF_PATH'"
       echo '              ./install.sh all'
       echo ''
-      return 66
+      return 79
     fi
 
     activate_conda || return $?
@@ -727,7 +727,7 @@ check_deps_esp() {
       echo "              cd $IDF_PATH"
       echo '              ./install.sh all'
       echo ''
-      return 67
+      return 80
     fi
 
     echo "INFO: ESP-IDF tools installation completed."
@@ -752,7 +752,7 @@ activate_conda() {
     echo ''
     echo "              . $SHELL_RUNNER"
     echo ''
-    return 91
+    return 101
   fi
 
   echo "INFO: Anaconda environment '$__env_name' has been activated."
@@ -795,7 +795,7 @@ case "$NANDBASE_CMD" in
     echo '              activate-nand-esp  \t(= ane)'
     echo "         got: $NANDBASE_CMD      \t(ran by $SHELL_RUNNER $SHELL_PARAMS)"
     echo ''
-    return 101
+    return 201
     ;;
 esac
 
