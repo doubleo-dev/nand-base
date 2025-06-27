@@ -195,7 +195,7 @@ check_deps() {
   which conda > /dev/null 2>&1
   if [ $? -ne 0 ]; then
 
-    if ! prompt_boolean "PROMPT: Anaconda is missing. Download now?"; then
+    if ! prompt_boolean "PROMPT: Anaconda is missing. Download the latest and install now?"; then
       echo 'ERROR: Anaconda is not installed. Please install it.'
       echo ''
       echo "        hint: 1. Visit     $CONDA_PAGE_URL"
@@ -215,13 +215,13 @@ check_deps() {
     __conda_url="$(conda_get_latest_url)"
     __retcode=$?
     if [ $__retcode -eq 0 ]; then
-      echo "INFO: Downloading Anaconda installer from $__conda_url"
+      echo "INFO: Downloading the latest Anaconda installer from $__conda_url"
       conda_download_latest "$__conda_url" "$CONDA_INSTALLER_PATH"
       __retcode=$?
     fi
 
     if [ $__retcode -ne 0 ]; then
-      echo 'ERROR: Failed to download Anaconda. Please download manually.'
+      echo 'ERROR: Failed to download the latest Anaconda. Please download manually.'
       echo ''
       echo '        hint: 1. Check your Internet connection.'
       echo "              2. Visit     $CONDA_PAGE_URL"
