@@ -357,7 +357,7 @@ check_deps_riot() {
   fi
 
   __expected_git_path="$RIOTBASE/.git"
-  if [ ! -d "$__expected_git_path" ]; then
+  if [ ! -f "$__expected_git_path" ]; then
 
     if ! prompt_boolean 'PROMPT: RIOT OS base submodule is missing. Download now?'; then
       echo 'ERROR: Failed to load the RIOT OS base submodule.'
@@ -623,7 +623,7 @@ check_deps_esp() {
   fi
 
   __expected_git_path="$IDF_PATH/.git"
-  if [ ! -d "$__expected_git_path" ]; then
+  if [ ! -f "$__expected_git_path" ]; then
 
     if ! prompt_boolean "PROMPT: ESP-IDF base submodule is missing. Download now?"; then
       echo 'ERROR: Failed to load the ESP-IDF base submodule.'
