@@ -807,6 +807,8 @@ activate_conda() {
 }
 
 activate_nand_riot () {
+  activate_conda || return $?
+
   if [ -f "$RIOTBASE/dist/tools/esptools/export.sh" ]; then
     . "$RIOTBASE/dist/tools/esptools/export.sh" esp32s3 > /dev/null
   fi
@@ -820,6 +822,8 @@ activate_nand_riot () {
 }
 
 activate_nand_esp() {
+  activate_conda || return $?
+
   if [ -f "$IDF_PATH/export.sh" ]; then
     . "$IDF_PATH/export.sh" > /dev/null 2>&1
   fi
