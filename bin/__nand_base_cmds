@@ -868,7 +868,6 @@ esac
 # Step 4: Execute the appropriate command
 case "$NANDBASE_CMD" in
   'activate-nand-riot' | 'anr')
-    activate_conda || return $?
     check_deps_riot || return $?
     activate_nand_riot || return $?
     ;;
