@@ -88,7 +88,7 @@ check_deps() {
     echo ''
     echo '        hint: Re-run this script with following commands:'
     echo ''
-    echo "              . $SHELL_RUNNER  (Note the leading dot and the required space)"
+    echo "                . $SHELL_RUNNER  (Note the leading dot and the required space)"
     echo ''
     return 11
   fi
@@ -102,11 +102,11 @@ check_deps() {
       echo ''
       echo '        hint: Add the following line to your shell rc file:'
       echo ''
-      echo "              echo 'export PATH=\"$NANDBASE_ROOT/bin:\$PATH\"' >> ~/.${SHELL_NAME}rc"
+      echo "                echo 'export PATH=\"$NANDBASE_ROOT/bin:\$PATH\"' >> ~/.${SHELL_NAME}rc"
       echo ''
       echo '        note: To ignore this message, run the following commands:'
       echo ''
-      echo "              touch $FLAG_SHELL_EXPORT"
+      echo "                touch $FLAG_SHELL_EXPORT"
       echo ''
     fi
   fi
@@ -120,7 +120,7 @@ check_deps() {
       echo ''
       echo '        hint: Re-run this script with following commands:'
       echo ''
-      echo "              . $SHELL_RUNNER"
+      echo "                . $SHELL_RUNNER"
       echo ''
       echo '         cmd: sudo apt install git'
       echo "              touch $FLAG_DEPS_COMMON"
@@ -135,8 +135,8 @@ check_deps() {
       echo '        hint: Check the error messages above.'
       echo '              You should install the dependencies manually:'
       echo ''
-      echo '              sudo apt install git'
-      echo "              touch $FLAG_DEPS_COMMON"
+      echo '                sudo apt install git'
+      echo "                touch $FLAG_DEPS_COMMON"
       echo ''
       return 13
     fi
@@ -148,7 +148,7 @@ check_deps() {
       echo '        hint: Check the error messages above.'
       echo '              You should create the flag file manually:'
       echo ''
-      echo "              touch $FLAG_DEPS_COMMON"
+      echo "                touch $FLAG_DEPS_COMMON"
       echo ''
     fi
   fi
@@ -164,7 +164,7 @@ check_deps() {
       echo ''
       echo '        hint: Re-run this script with following commands:'
       echo ''
-      echo "              . $SHELL_RUNNER"
+      echo "                . $SHELL_RUNNER"
       echo ''
       echo "         cmd: git clone $NANDBASE_GIT $NANDBASE_ROOT"
       echo ''
@@ -178,7 +178,7 @@ check_deps() {
       echo '        hint: Check the error messages above.'
       echo '              You should clone it with Git manually:'
       echo ''
-      echo "              git clone $NANDBASE_GIT $NANDBASE_ROOT"
+      echo "                git clone $NANDBASE_GIT $NANDBASE_ROOT"
       echo ''
       return 15
     fi
@@ -187,7 +187,7 @@ check_deps() {
     echo ''
     echo '        hint: Re-run this script with following commands:'
     echo ''
-    echo "              . $NANDBASE_ROOT/bin/$NANDBASE_CMD"
+    echo "                . $NANDBASE_ROOT/bin/$NANDBASE_CMD"
     echo ''
     return 16
   fi
@@ -205,8 +205,8 @@ check_deps() {
         echo '              3. Download  "Linux 64-Bit (x86) Installer"'
         echo '              4. Open a terminal and run the following commands:'
         echo ''
-        echo '              chmod +x Anaconda3-$VERSION-Linux-x86_64.sh'
-        echo '              ./Anaconda3-$VERSION-Linux-x86_64.sh'
+        echo '                chmod +x Anaconda3-$VERSION-Linux-x86_64.sh'
+        echo '                ./Anaconda3-$VERSION-Linux-x86_64.sh'
         echo ''
         echo '              5. Follow the installer prompts. Enable shell integration when prompted.'
         echo '              6. Restart the terminal.'
@@ -231,8 +231,8 @@ check_deps() {
         echo '              4. Download  "Linux 64-Bit (x86) Installer"'
         echo '              5. Open a terminal and run the following commands:'
         echo ''
-        echo '              chmod +x Anaconda3-$VERSION-Linux-x86_64.sh'
-        echo '              ./Anaconda3-$VERSION-Linux-x86_64.sh'
+        echo '                chmod +x Anaconda3-$VERSION-Linux-x86_64.sh'
+        echo '                ./Anaconda3-$VERSION-Linux-x86_64.sh'
         echo ''
         echo '              6. Follow the installer prompts. Enable shell integration when prompted.'
         echo '              7. Restart the terminal.'
@@ -250,7 +250,7 @@ check_deps() {
         echo '        hint: Check the error messages above.'
         echo '              You should run the downloaded Anaconda installer manually:'
         echo ''
-        echo "              $CONDA_INSTALLER_PATH"
+        echo "                $CONDA_INSTALLER_PATH"
         echo ''
         echo '        note: Follow the installer prompts. Enable shell integration when prompted.'
         echo '              After installation, restart the terminal.'
@@ -263,18 +263,18 @@ check_deps() {
         echo ''
         echo '        hint: If you already installed it, run the following commands:'
         echo ''
-        echo '              conda init --all'
+        echo '                conda init --all'
         echo ''
         echo '              If not installed, re-run this script with following commands:'
         echo ''
-        echo "              . $SHELL_RUNNER"
+        echo "                . $SHELL_RUNNER"
         echo ''
         echo '              To manually install the Anaconda:'
         echo ''
         echo '              1. Open a terminal and run the following commands:'
         echo ''
-        echo "              chmod +x $CONDA_INSTALLER_PATH"
-        echo "              $CONDA_INSTALLER_PATH"
+        echo "                chmod +x $CONDA_INSTALLER_PATH"
+        echo "                $CONDA_INSTALLER_PATH"
         echo ''
         echo '              2. Follow the installer prompts. Enable shell integration when prompted.'
         echo '              3. Restart the terminal.'
@@ -292,7 +292,7 @@ check_deps() {
         echo '        hint: Check the error messages above.'
         echo '              You should run the downloaded Anaconda installer manually:'
         echo ''
-        echo "              $CONDA_INSTALLER_PATH"
+        echo "                $CONDA_INSTALLER_PATH"
         echo ''
         echo '        note: Follow the installer prompts. Enable shell integration when prompted.'
         echo '              After installation, restart the terminal.'
@@ -317,7 +317,7 @@ check_deps_riot() {
       echo ''
       echo '        hint: Re-run this script with following commands:'
       echo ''
-      echo "              . $SHELL_RUNNER"
+      echo "                . $SHELL_RUNNER"
       echo ''
       echo '         cmd: sudo apt install wget flex bison gperf python3 python3-pip \'
       echo '                               python3-setuptools cmake ninja-build ccache libffi-dev \'
@@ -336,9 +336,9 @@ check_deps_riot() {
       echo '        hint: Check the error messages above.'
       echo '              You should install the dependencies manually:'
       echo ''
-      echo '              sudo apt install wget flex bison gperf python3 python3-pip \'
-      echo '                               python3-setuptools cmake ninja-build ccache libffi-dev \'
-      echo '                               libssl-dev dfu-util libusb-1.0-0 python3-virtualenv'
+      echo '                sudo apt install wget flex bison gperf python3 python3-pip \'
+      echo '                                 python3-setuptools cmake ninja-build ccache libffi-dev \'
+      echo '                                 libssl-dev dfu-util libusb-1.0-0 python3-virtualenv'
       echo "              touch $FLAG_DEPS_RIOT"
       echo ''
       return 42
@@ -351,7 +351,7 @@ check_deps_riot() {
       echo '        hint: Check the error messages above.'
       echo '              You should create the flag file manually:'
       echo ''
-      echo "              touch $FLAG_DEPS_RIOT"
+      echo "                touch $FLAG_DEPS_RIOT"
       echo ''
     fi
   fi
@@ -366,7 +366,7 @@ check_deps_riot() {
       echo ''
       echo '        hint: Re-run this script with following commands:'
       echo ''
-      echo "              . $SHELL_RUNNER"
+      echo "                . $SHELL_RUNNER"
       echo ''
       echo "         cmd: cd $NANDBASE_ROOT"
       echo "              git submodule update --init --recursive $RIOTBASE"
@@ -385,8 +385,8 @@ check_deps_riot() {
       echo '        hint: Check the error messages above.'
       echo '              You should download the RIOT OS base submodule manually:'
       echo ''
-      echo "              cd $NANDBASE_ROOT"
-      echo "              git submodule update --init --recursive $RIOTBASE"
+      echo "                cd $NANDBASE_ROOT"
+      echo "                git submodule update --init --recursive $RIOTBASE"
       echo ''
       return 44
     fi
@@ -404,7 +404,7 @@ check_deps_riot() {
       echo ''
       echo '        hint: Re-run this script with following commands:'
       echo ''
-      echo "              . $SHELL_RUNNER"
+      echo "                . $SHELL_RUNNER"
       echo ''
       echo "         cmd: make -f $NANDBASE_PATH/esp-idf.Makefile"
       echo ''
@@ -419,7 +419,7 @@ check_deps_riot() {
       echo '        hint: Check the error messages above.'
       echo '              You should install the RIOT OS patched ESP-IDF manually:'
       echo ''
-      echo "              make -f $NANDBASE_PATH/esp-idf.Makefile"
+      echo "                make -f $NANDBASE_PATH/esp-idf.Makefile"
       echo ''
       return 46
     fi
@@ -440,7 +440,7 @@ check_deps_riot() {
       echo ''
       echo '        hint: Re-run this script with following commands:'
       echo ''
-      echo "              . $SHELL_RUNNER"
+      echo "                . $SHELL_RUNNER"
       echo ''
       echo "         cmd: cd $IDF_PATH"
       echo "              git submodule update --init --recursive $IDF_PATH"
@@ -459,8 +459,8 @@ check_deps_riot() {
       echo '        hint: Check the error messages above.'
       echo '              You should download the submodules manually:'
       echo ''
-      echo "              cd $IDF_PATH"
-      echo "              git submodule update --init --recursive $IDF_PATH"
+      echo "                cd $IDF_PATH"
+      echo "                git submodule update --init --recursive $IDF_PATH"
       echo ''
       return 48
     fi
@@ -476,7 +476,7 @@ check_deps_riot() {
       echo ''
       echo '        hint: Re-run this script with following commands:'
       echo ''
-      echo "              . $SHELL_RUNNER"
+      echo "                . $SHELL_RUNNER"
       echo ''
       echo "         cmd: conda create -n $CONDA_ENV_NAME python=3.8"
       echo "              conda activate $CONDA_ENV_NAME"
@@ -493,9 +493,9 @@ check_deps_riot() {
       echo '        hint: Check the error messages above.'
       echo '              You should create the environment manually:'
       echo ''
-      echo "              conda create -n $CONDA_ENV_NAME python=3.8"
-      echo "              conda activate $CONDA_ENV_NAME"
-      echo '              pip install psutil'
+      echo "                conda create -n $CONDA_ENV_NAME python=3.8"
+      echo "                conda activate $CONDA_ENV_NAME"
+      echo '                pip install psutil'
       echo ''
       return 50
     fi
@@ -510,13 +510,13 @@ check_deps_riot() {
       echo '        hint: Check the error messages above.'
       echo '              You must install the Python dependencies manually:'
       echo ''
-      echo "              conda activate $CONDA_ENV_NAME"
-      echo '              pip install psutil'
+      echo "                conda activate $CONDA_ENV_NAME"
+      echo '                pip install psutil'
       echo ''
       echo '        note: This warning will not appear again.'
       echo '              Stopping here. After installing, re-run this script with following commands:'
       echo ''
-      echo "              . $SHELL_RUNNER"
+      echo "                . $SHELL_RUNNER"
       echo ''
       return 51
     fi
@@ -533,7 +533,7 @@ check_deps_riot() {
       echo ''
       echo '        hint: Re-run this script with following commands:'
       echo ''
-      echo "              . $SHELL_RUNNER"
+      echo "                . $SHELL_RUNNER"
       echo ''
       echo "         cmd: export IDF_PATH='$IDF_PATH'"
       echo "              export IDF_TOOLS_PATH='$IDF_TOOLS_PATH'"
@@ -557,11 +557,11 @@ check_deps_riot() {
       echo '        hint: Check the error messages above.'
       echo '              You should install the ESP-IDF tools manually:'
       echo ''
-      echo "              export IDF_PATH=$IDF_PATH"
-      echo "              export IDF_TOOLS_PATH=$IDF_TOOLS_PATH"
-      echo "              conda activate '$CONDA_ENV_NAME'"
-      echo "              cd $IDF_PATH"
-      echo '              ./install.sh all'
+      echo "                export IDF_PATH=$IDF_PATH"
+      echo "                export IDF_TOOLS_PATH=$IDF_TOOLS_PATH"
+      echo "                conda activate '$CONDA_ENV_NAME'"
+      echo "                cd $IDF_PATH"
+      echo '                ./install.sh all'
       echo ''
       return 53
     fi
@@ -582,7 +582,7 @@ check_deps_esp() {
       echo ''
       echo '        hint: Re-run this script with following commands:'
       echo ''
-      echo "              . $SHELL_RUNNER"
+      echo "                . $SHELL_RUNNER"
       echo ''
       echo '         cmd: sudo apt install wget flex bison gperf python3 python3-pip python3-venv \'
       echo '                               cmake ninja-build ccache libffi-dev libssl-dev dfu-util \'
@@ -601,10 +601,10 @@ check_deps_esp() {
       echo '        hint: Check the error messages above.'
       echo '              You should install the dependencies manually:'
       echo ''
-      echo '              sudo apt install wget flex bison gperf python3 python3-pip python3-venv \'
-      echo '                               cmake ninja-build ccache libffi-dev libssl-dev dfu-util \'
-      echo '                               libusb-1.0-0'
-      echo "              touch $FLAG_DEPS_ESP"
+      echo '                sudo apt install wget flex bison gperf python3 python3-pip python3-venv \'
+      echo '                                 cmake ninja-build ccache libffi-dev libssl-dev dfu-util \'
+      echo '                                 libusb-1.0-0'
+      echo "                touch $FLAG_DEPS_ESP"
       echo ''
       return 72
     fi
@@ -616,7 +616,7 @@ check_deps_esp() {
       echo '        hint: Check the error messages above.'
       echo '              You should create the flag file manually:'
       echo ''
-      echo "              touch $FLAG_DEPS_ESP"
+      echo "                touch $FLAG_DEPS_ESP"
       echo ''
     fi
   fi
@@ -631,7 +631,7 @@ check_deps_esp() {
       echo ''
       echo '        hint: Re-run this script with following commands:'
       echo ''
-      echo "              . $SHELL_RUNNER"
+      echo "                . $SHELL_RUNNER"
       echo ''
       echo "         cmd: cd $NANDBASE_ROOT"
       echo "              git submodule update --init --recursive $IDF_PATH"
@@ -650,8 +650,8 @@ check_deps_esp() {
       echo '        hint: Check the error messages above.'
       echo '              You should download the ESP-IDF base submodule manually:'
       echo ''
-      echo "              cd $NANDBASE_ROOT"
-      echo "              git submodule update --init --recursive $IDF_PATH"
+      echo "                cd $NANDBASE_ROOT"
+      echo "                git submodule update --init --recursive $IDF_PATH"
       echo ''
       return 74
     fi
@@ -672,7 +672,7 @@ check_deps_esp() {
       echo ''
       echo '        hint: Re-run this script with following commands:'
       echo ''
-      echo "              . $SHELL_RUNNER"
+      echo "                . $SHELL_RUNNER"
       echo ''
       echo "         cmd: cd $IDF_PATH"
       echo "              git submodule update --init --recursive $IDF_PATH"
@@ -691,8 +691,8 @@ check_deps_esp() {
       echo '        hint: Check the error messages above.'
       echo '              You should download the submodules manually:'
       echo ''
-      echo "              cd $IDF_PATH"
-      echo "              git submodule update --init --recursive $IDF_PATH"
+      echo "                cd $IDF_PATH"
+      echo "                git submodule update --init --recursive $IDF_PATH"
       echo ''
       return 76
     fi
@@ -708,7 +708,7 @@ check_deps_esp() {
       echo ''
       echo '        hint: Re-run this script with following commands:'
       echo ''
-      echo "              . $SHELL_RUNNER"
+      echo "                . $SHELL_RUNNER"
       echo ''
       echo "         cmd: conda create -n $CONDA_ENV_NAME python=3.11"
       echo ''
@@ -723,7 +723,7 @@ check_deps_esp() {
       echo '        hint: Check the error messages above.'
       echo '              You should create the environment manually:'
       echo ''
-      echo "              conda create -n $CONDA_ENV_NAME python=3.11"
+      echo "                conda create -n $CONDA_ENV_NAME python=3.11"
       echo ''
       return 78
     fi
@@ -742,7 +742,7 @@ check_deps_esp() {
       echo ''
       echo '        hint: Re-run this script with following commands:'
       echo ''
-      echo "              . $SHELL_RUNNER"
+      echo "                . $SHELL_RUNNER"
       echo ''
       echo "         cmd: export IDF_PATH='$IDF_PATH'"
       echo "              export IDF_TOOLS_PATH='$IDF_TOOLS_PATH'"
@@ -766,11 +766,11 @@ check_deps_esp() {
       echo '        hint: Check the error messages above.'
       echo '              You should install the ESP-IDF tools manually:'
       echo ''
-      echo "              export IDF_PATH=$IDF_PATH"
-      echo "              export IDF_TOOLS_PATH=$IDF_TOOLS_PATH"
-      echo "              conda activate '$CONDA_ENV_NAME'"
-      echo "              cd $IDF_PATH"
-      echo '              ./install.sh all'
+      echo "                export IDF_PATH=$IDF_PATH"
+      echo "                export IDF_TOOLS_PATH=$IDF_TOOLS_PATH"
+      echo "                conda activate '$CONDA_ENV_NAME'"
+      echo "                cd $IDF_PATH"
+      echo '                ./install.sh all'
       echo ''
       return 80
     fi
@@ -791,11 +791,11 @@ activate_conda() {
     echo '        hint: Check the error messages above.'
     echo '              You should verify if the environment can be activated manually:'
     echo ''
-    echo "              conda activate '$__env_name'"
+    echo "                conda activate '$__env_name'"
     echo ''
     echo '              Ensure that the environment can be activated, then re-run this script with following commands:'
     echo ''
-    echo "              . $SHELL_RUNNER"
+    echo "                . $SHELL_RUNNER"
     echo ''
     return 101
   fi
