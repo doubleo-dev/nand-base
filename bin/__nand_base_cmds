@@ -166,19 +166,19 @@ check_deps() {
       echo ''
       echo "              . $SHELL_RUNNER"
       echo ''
-      echo "         cmd: git clone --recursive $NANDBASE_GIT $NANDBASE_ROOT"
+      echo "         cmd: git clone $NANDBASE_GIT $NANDBASE_ROOT"
       echo ''
       return 14
     fi
 
-    git clone --recursive "$NANDBASE_GIT" "$NANDBASE_ROOT"
+    git clone "$NANDBASE_GIT" "$NANDBASE_ROOT"
     if [ $? -ne 0 ]; then
       echo 'ERROR: Failed to clone the NAND flash development base.'
       echo ''
       echo '        hint: Check the error messages above.'
       echo '              You should clone it with Git manually:'
       echo ''
-      echo "              git clone --recursive $NANDBASE_GIT $NANDBASE_ROOT"
+      echo "              git clone $NANDBASE_GIT $NANDBASE_ROOT"
       echo ''
       return 15
     fi
@@ -324,13 +324,13 @@ check_deps_riot() {
       echo "              . $SHELL_RUNNER"
       echo ''
       echo "         cmd: cd $NANDBASE_ROOT"
-      echo '              git submodule update --init --recursive'
+      echo "              git submodule update --init --recursive $RIOTBASE"
       echo ''
       return 33
     fi
 
     pushd "$NANDBASE_ROOT"
-    git submodule update --init --recursive
+    git submodule update --init --recursive "$RIOTBASE"
     __retcode=$?
     popd
 
@@ -341,7 +341,7 @@ check_deps_riot() {
       echo '              You should download the RIOT OS base submodule manually:'
       echo ''
       echo "              cd $NANDBASE_ROOT"
-      echo '              git submodule update --init --recursive'
+      echo "              git submodule update --init --recursive $RIOTBASE"
       echo ''
       return 34
     fi
@@ -398,13 +398,13 @@ check_deps_riot() {
       echo "              . $SHELL_RUNNER"
       echo ''
       echo "         cmd: cd $IDF_PATH"
-      echo '              git submodule update --init --recursive'
+      echo "              git submodule update --init --recursive $IDF_PATH"
       echo ''
       return 37
     fi
 
     pushd "$IDF_PATH"
-    git submodule update --init --recursive
+    git submodule update --init --recursive "$IDF_PATH"
     __retcode=$?
     popd
 
@@ -415,7 +415,7 @@ check_deps_riot() {
       echo '              You should download the submodules manually:'
       echo ''
       echo "              cd $IDF_PATH"
-      echo '              git submodule update --init --recursive'
+      echo "              git submodule update --init --recursive $IDF_PATH"
       echo ''
       return 38
     fi
@@ -589,13 +589,13 @@ check_deps_esp() {
       echo "              . $SHELL_RUNNER"
       echo ''
       echo "         cmd: cd $NANDBASE_ROOT"
-      echo '              git submodule update --init --recursive'
+      echo "              git submodule update --init --recursive $IDF_PATH"
       echo ''
       return 63
     fi
 
     pushd "$NANDBASE_ROOT"
-    git submodule update --init --recursive
+    git submodule update --init --recursive "$IDF_PATH"
     __retcode=$?
     popd
 
@@ -606,7 +606,7 @@ check_deps_esp() {
       echo '              You should download the ESP-IDF base submodule manually:'
       echo ''
       echo "              cd $NANDBASE_ROOT"
-      echo '              git submodule update --init --recursive'
+      echo "              git submodule update --init --recursive $IDF_PATH"
       echo ''
       return 64
     fi
@@ -630,13 +630,13 @@ check_deps_esp() {
       echo "              . $SHELL_RUNNER"
       echo ''
       echo "         cmd: cd $IDF_PATH"
-      echo '              git submodule update --init --recursive'
+      echo "              git submodule update --init --recursive $IDF_PATH"
       echo ''
       return 65
     fi
 
     pushd "$IDF_PATH"
-    git submodule update --init --recursive
+    git submodule update --init --recursive "$IDF_PATH"
     __retcode=$?
     popd
 
@@ -647,7 +647,7 @@ check_deps_esp() {
       echo '              You should download the submodules manually:'
       echo ''
       echo "              cd $IDF_PATH"
-      echo '              git submodule update --init --recursive'
+      echo "              git submodule update --init --recursive $IDF_PATH"
       echo ''
       return 38
     fi
