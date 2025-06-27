@@ -195,65 +195,110 @@ check_deps() {
   which conda > /dev/null 2>&1
   if [ $? -ne 0 ]; then
 
-    if ! prompt_boolean "PROMPT: Anaconda is missing. Download the latest and install now?"; then
-      echo 'ERROR: Anaconda is not installed. Please install it.'
-      echo ''
-      echo "        hint: 1. Visit     $CONDA_PAGE_URL"
-      echo '              2. Open      "Distribution Installers"'
-      echo '              3. Download  "Linux 64-Bit (x86) Installer"'
-      echo '              4. Open a terminal and run the following commands:'
-      echo ''
-      echo '              chmod +x Anaconda3-$VERSION-Linux-x86_64.sh'
-      echo '              ./Anaconda3-$VERSION-Linux-x86_64.sh'
-      echo ''
-      echo '              5. Follow the installer prompts. Enable shell integration when prompted.'
-      echo '              6. Restart the terminal.'
-      echo ''
-      return 17
-    fi
+    if [ ! -f "$CONDA_INSTALLER_PATH" ]; then
 
-    __conda_url="$(conda_get_latest_url)"
-    __retcode=$?
-    if [ $__retcode -eq 0 ]; then
-      echo "INFO: Downloading the latest Anaconda installer from $__conda_url"
-      conda_download_latest "$__conda_url" "$CONDA_INSTALLER_PATH"
+      if ! prompt_boolean "PROMPT: Anaconda is missing. Download the latest and install now?"; then
+        echo 'ERROR: Anaconda is not installed. Please install it.'
+        echo ''
+        echo "        hint: 1. Visit     $CONDA_PAGE_URL"
+        echo '              2. Open      "Distribution Installers"'
+        echo '              3. Download  "Linux 64-Bit (x86) Installer"'
+        echo '              4. Open a terminal and run the following commands:'
+        echo ''
+        echo '              chmod +x Anaconda3-$VERSION-Linux-x86_64.sh'
+        echo '              ./Anaconda3-$VERSION-Linux-x86_64.sh'
+        echo ''
+        echo '              5. Follow the installer prompts. Enable shell integration when prompted.'
+        echo '              6. Restart the terminal.'
+        echo ''
+        return 17
+      fi
+
+      __conda_url="$(conda_get_latest_url)"
       __retcode=$?
-    fi
+      if [ $__retcode -eq 0 ]; then
+        echo "INFO: Downloading the latest Anaconda installer from $__conda_url"
+        conda_download_latest "$__conda_url" "$CONDA_INSTALLER_PATH"
+        __retcode=$?
+      fi
 
-    if [ $__retcode -ne 0 ]; then
-      echo 'ERROR: Failed to download the latest Anaconda. Please download manually.'
-      echo ''
-      echo '        hint: 1. Check your Internet connection.'
-      echo "              2. Visit     $CONDA_PAGE_URL"
-      echo '              3. Open      "Distribution Installers"'
-      echo '              4. Download  "Linux 64-Bit (x86) Installer"'
-      echo '              5. Open a terminal and run the following commands:'
-      echo ''
-      echo '              chmod +x Anaconda3-$VERSION-Linux-x86_64.sh'
-      echo '              ./Anaconda3-$VERSION-Linux-x86_64.sh'
-      echo ''
-      echo '              6. Follow the installer prompts. Enable shell integration when prompted.'
-      echo '              7. Restart the terminal.'
-      echo ''
-      return 18
-    fi
+      if [ $__retcode -ne 0 ]; then
+        echo 'ERROR: Failed to download the latest Anaconda. Please download manually.'
+        echo ''
+        echo '        hint: 1. Check your Internet connection.'
+        echo "              2. Visit     $CONDA_PAGE_URL"
+        echo '              3. Open      "Distribution Installers"'
+        echo '              4. Download  "Linux 64-Bit (x86) Installer"'
+        echo '              5. Open a terminal and run the following commands:'
+        echo ''
+        echo '              chmod +x Anaconda3-$VERSION-Linux-x86_64.sh'
+        echo '              ./Anaconda3-$VERSION-Linux-x86_64.sh'
+        echo ''
+        echo '              6. Follow the installer prompts. Enable shell integration when prompted.'
+        echo '              7. Restart the terminal.'
+        echo ''
+        return 18
+      fi
 
-    echo "INFO: Anaconda installer downloaded to $CONDA_INSTALLER_PATH"
-    echo 'INFO: Running Anaconda installer. Please follow the prompts. Enable shell integration when prompted.'
-    chmod +x "$CONDA_INSTALLER_PATH"
-    "$CONDA_INSTALLER_PATH"
-    if [ $? -ne 0 ]; then
-      echo 'ERROR: Anaconda installation failed.'
-      echo ''
-      echo '        hint: Check the error messages above.'
-      echo '              You should run the downloaded Anaconda installer manually:'
-      echo ''
-      echo "              $CONDA_INSTALLER_PATH"
-      echo ''
-      echo '        note: Follow the installer prompts. Enable shell integration when prompted.'
-      echo '              After installation, restart the terminal.'
-      echo ''
-      return 19
+      echo "INFO: Anaconda installer downloaded to $CONDA_INSTALLER_PATH"
+      echo 'INFO: Running Anaconda installer. Please follow the prompts. Enable shell integration when prompted.'
+      chmod +x "$CONDA_INSTALLER_PATH"
+      "$CONDA_INSTALLER_PATH"
+      if [ $? -ne 0 ]; then
+        echo 'ERROR: Anaconda installation failed.'
+        echo ''
+        echo '        hint: Check the error messages above.'
+        echo '              You should run the downloaded Anaconda installer manually:'
+        echo ''
+        echo "              $CONDA_INSTALLER_PATH"
+        echo ''
+        echo '        note: Follow the installer prompts. Enable shell integration when prompted.'
+        echo '              After installation, restart the terminal.'
+        echo ''
+        return 19
+      fi
+    else
+      if ! prompt_boolean "PROMPT: Anaconda is missing, but the installer was already downloaded. Re-install now?"; then
+        echo 'ERROR: Anaconda is not installed or not fully configured. Please install it.'
+        echo ''
+        echo '        hint: If you already installed it, run the following commands:'
+        echo ''
+        echo '              conda init --all'
+        echo ''
+        echo '              If not installed, re-run this script with following commands:'
+        echo ''
+        echo "              . $SHELL_RUNNER"
+        echo ''
+        echo '              To manually install the Anaconda:'
+        echo ''
+        echo '              1. Open a terminal and run the following commands:'
+        echo ''
+        echo "              chmod +x $CONDA_INSTALLER_PATH"
+        echo "              $CONDA_INSTALLER_PATH"
+        echo ''
+        echo '              2. Follow the installer prompts. Enable shell integration when prompted.'
+        echo '              3. Restart the terminal.'
+        echo ''
+        return 20
+      fi
+
+      echo "INFO: Running existing Anaconda installer from $CONDA_INSTALLER_PATH"
+      echo '      Please follow the prompts. Enable shell integration when prompted.'
+      chmod +x "$CONDA_INSTALLER_PATH"
+      "$CONDA_INSTALLER_PATH"
+      if [ $? -ne 0 ]; then
+        echo 'ERROR: Anaconda installation failed.'
+        echo ''
+        echo '        hint: Check the error messages above.'
+        echo '              You should run the downloaded Anaconda installer manually:'
+        echo ''
+        echo "              $CONDA_INSTALLER_PATH"
+        echo ''
+        echo '        note: Follow the installer prompts. Enable shell integration when prompted.'
+        echo '              After installation, restart the terminal.'
+        echo ''
+        return 21
+      fi
     fi
 
     echo 'INFO: Anaconda installation completed.'
