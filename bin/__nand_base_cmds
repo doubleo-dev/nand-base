@@ -356,12 +356,13 @@ check_deps_riot() {
     fi
   fi
 
-  if [ ! -d "$RIOTBASE" ]; then
+  __expected_git_path="$RIOTBASE/.git"
+  if [ ! -d "$__expected_git_path" ]; then
 
     if ! prompt_boolean 'PROMPT: RIOT OS base submodule is missing. Download now?'; then
       echo 'ERROR: Failed to load the RIOT OS base submodule.'
       echo ''
-      echo "    expected: $RIOTBASE"
+      echo "    expected: $__expected_git_path"
       echo '         got: (directory does not exist at the expected path)'
       echo ''
       echo '        hint: Re-run this script with following commands:'
@@ -621,12 +622,13 @@ check_deps_esp() {
     fi
   fi
 
-  if [ ! -d "$IDF_PATH" ]; then
+  __expected_git_path="$IDF_PATH/.git"
+  if [ ! -d "$__expected_git_path" ]; then
 
     if ! prompt_boolean "PROMPT: ESP-IDF base submodule is missing. Download now?"; then
       echo 'ERROR: Failed to load the ESP-IDF base submodule.'
       echo ''
-      echo "    expected: $IDF_PATH"
+      echo "    expected: $__expected_git_path"
       echo '         got: (directory does not exist at the expected path)'
       echo ''
       echo '        hint: Re-run this script with following commands:'
