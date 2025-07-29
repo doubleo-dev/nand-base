@@ -853,9 +853,9 @@ case "$NANDBASE_CMD" in
   *)
     echo 'ERROR: The command is not supported.'
     echo ''
-    echo '    expected: activate-nand-riot \t(= anr)'
-    echo '              activate-nand-esp  \t(= ane)'
-    echo "         got: $NANDBASE_CMD      \t(ran by $SHELL_RUNNER $SHELL_PARAMS)"
+    echo '    expected: activate-nand-riot   (= anr)'
+    echo '              activate-nand-esp    (= ane)'
+    echo "         got: $NANDBASE_CMD        (ran by $SHELL_RUNNER $SHELL_PARAMS)"
     echo ''
     return 201
     ;;
