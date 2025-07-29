@@ -1,7 +1,18 @@
 #!/bin/sh
 
 export SHELL_NAME="$(ps -p $$ -o comm=)"
-export SHELL_RUNNER="$0"
+case "$SHELL_NAME" in
+  "bash") export SHELL_RUNNER="$BASH_SOURCE";;
+  "zsh")  export SHELL_RUNNER="$0";;
+  *)      echo 'ERROR: Current shell is not supported.'
+          echo ''
+          echo "    expected: bash"
+          echo "              zsh"
+          echo "         got: $SHELL_NAME"
+          echo ''
+          return 201;;
+esac
+
 export SHELL_PARAMS="$@"
 export SHELL_DIR="$(dirname $SHELL_RUNNER)"
 
