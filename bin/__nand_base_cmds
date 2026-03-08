@@ -20,9 +20,9 @@ export NANDBASE_CMD="$(basename $SHELL_RUNNER)"
 export NANDBASE_GIT='https://github.com/doubleo-dev/nand-base.git'
 export NANDBASE_ROOT="$HOME/nand-base"
 
-export CONDA_INSTALLER_PATH="$NANDBASE_ROOT/Anaconda3-Linux-x86_64.sh"
+export CONDA_INSTALLER_PATH="$NANDBASE_ROOT/Miniconda3-Linux-x86_64.sh"
 export CONDA_PAGE_URL='https://www.anaconda.com/download/success'
-export CONDA_LATEST_URL_REGEX='https://repo.anaconda.com/archive/Anaconda3-[^"]*-Linux-x86_64.sh'
+export CONDA_LATEST_URL='https://repo.anaconda.com/miniconda/Miniconda3-latest-Linux-x86_64.sh'
 
 export FLAG_DEPS_COMMON="$NANDBASE_ROOT/.deps-installed"
 export FLAG_SHELL_EXPORT="$NANDBASE_ROOT/.ignore-export"
@@ -78,7 +78,7 @@ conda_find_env() {
 
 conda_get_latest_url() {
   # print url to stdout
-  curl "$CONDA_PAGE_URL" 2>/dev/null | grep -o "$CONDA_LATEST_URL_REGEX" | head -n1
+  echo "$CONDA_LATEST_URL"
   return $?
 }
 
@@ -208,16 +208,16 @@ check_deps() {
 
     if [ ! -f "$CONDA_INSTALLER_PATH" ]; then
 
-      if ! prompt_boolean "PROMPT: Anaconda is missing. Download the latest and install now?"; then
-        echo 'ERROR: Anaconda is not installed. Please install it.'
+      if ! prompt_boolean "PROMPT: conda is missing. Download the latest and install now?"; then
+        echo 'ERROR: conda is not installed. Please install it.'
         echo ''
         echo "        hint: 1. Visit     $CONDA_PAGE_URL"
-        echo '              2. Open      "Distribution Installers"'
-        echo '              3. Download  "Linux 64-Bit (x86) Installer"'
+        echo '              2. Open      "Linux - Miniconda"'
+        echo '              3. Download  "64-Bit (x86) Installer"'
         echo '              4. Open a terminal and run the following commands:'
         echo ''
-        echo '                chmod +x Anaconda3-$VERSION-Linux-x86_64.sh'
-        echo '                ./Anaconda3-$VERSION-Linux-x86_64.sh'
+        echo '                chmod +x Miniconda3-$VERSION-Linux-x86_64.sh'
+        echo '                ./Miniconda3-$VERSION-Linux-x86_64.sh'
         echo ''
         echo '              5. Follow the installer prompts. Enable shell integration when prompted.'
         echo '              6. Restart the terminal.'
@@ -228,22 +228,22 @@ check_deps() {
       __conda_url="$(conda_get_latest_url)"
       __retcode=$?
       if [ $__retcode -eq 0 ]; then
-        echo "INFO: Downloading the latest Anaconda installer from $__conda_url"
+        echo "INFO: Downloading the latest Miniconda installer from $__conda_url"
         conda_download_latest "$__conda_url" "$CONDA_INSTALLER_PATH"
         __retcode=$?
       fi
 
       if [ $__retcode -ne 0 ]; then
-        echo 'ERROR: Failed to download the latest Anaconda. Please download manually.'
+        echo 'ERROR: Failed to download the latest Miniconda. Please download manually.'
         echo ''
         echo '        hint: 1. Check your Internet connection.'
         echo "              2. Visit     $CONDA_PAGE_URL"
-        echo '              3. Open      "Distribution Installers"'
-        echo '              4. Download  "Linux 64-Bit (x86) Installer"'
+        echo '              3. Open      "Linux - Miniconda"'
+        echo '              4. Download  "64-Bit (x86) Installer"'
         echo '              5. Open a terminal and run the following commands:'
         echo ''
-        echo '                chmod +x Anaconda3-$VERSION-Linux-x86_64.sh'
-        echo '                ./Anaconda3-$VERSION-Linux-x86_64.sh'
+        echo '                chmod +x Miniconda3-$VERSION-Linux-x86_64.sh'
+        echo '                ./Miniconda3-$VERSION-Linux-x86_64.sh'
         echo ''
         echo '              6. Follow the installer prompts. Enable shell integration when prompted.'
         echo '              7. Restart the terminal.'
@@ -251,15 +251,15 @@ check_deps() {
         return 18
       fi
 
-      echo "INFO: Anaconda installer downloaded to $CONDA_INSTALLER_PATH"
-      echo 'INFO: Running Anaconda installer. Please follow the prompts. Enable shell integration when prompted.'
+      echo "INFO: Miniconda installer downloaded to $CONDA_INSTALLER_PATH"
+      echo 'INFO: Running Miniconda installer. Please follow the prompts. Enable shell integration when prompted.'
       chmod +x "$CONDA_INSTALLER_PATH"
       "$CONDA_INSTALLER_PATH"
       if [ $? -ne 0 ]; then
-        echo 'ERROR: Anaconda installation failed.'
+        echo 'ERROR: Miniconda installation failed.'
         echo ''
         echo '        hint: Check the error messages above.'
-        echo '              You should run the downloaded Anaconda installer manually:'
+        echo '              You should run the downloaded Miniconda installer manually:'
         echo ''
         echo "                $CONDA_INSTALLER_PATH"
         echo ''
@@ -269,8 +269,8 @@ check_deps() {
         return 19
       fi
     else
-      if ! prompt_boolean "PROMPT: Anaconda is missing, but the installer was already downloaded. Re-install now?"; then
-        echo 'ERROR: Anaconda is not installed or not fully configured. Please install it.'
+      if ! prompt_boolean "PROMPT: conda is missing, but the installer was already downloaded. Re-install now?"; then
+        echo 'ERROR: conda is not installed or not fully configured. Please install it.'
         echo ''
         echo '        hint: If you already installed it, run the following commands:'
         echo ''
@@ -280,7 +280,7 @@ check_deps() {
         echo ''
         echo "                . $SHELL_RUNNER"
         echo ''
-        echo '              To manually install the Anaconda:'
+        echo '              To manually install the Miniconda:'
         echo ''
         echo '              1. Open a terminal and run the following commands:'
         echo ''
@@ -293,15 +293,15 @@ check_deps() {
         return 20
       fi
 
-      echo "INFO: Running existing Anaconda installer from $CONDA_INSTALLER_PATH"
+      echo "INFO: Running existing Miniconda installer from $CONDA_INSTALLER_PATH"
       echo '      Please follow the prompts. Enable shell integration when prompted.'
       chmod +x "$CONDA_INSTALLER_PATH"
       "$CONDA_INSTALLER_PATH"
       if [ $? -ne 0 ]; then
-        echo 'ERROR: Anaconda installation failed.'
+        echo 'ERROR: Miniconda installation failed.'
         echo ''
         echo '        hint: Check the error messages above.'
-        echo '              You should run the downloaded Anaconda installer manually:'
+        echo '              You should run the downloaded Miniconda installer manually:'
         echo ''
         echo "                $CONDA_INSTALLER_PATH"
         echo ''
@@ -312,7 +312,7 @@ check_deps() {
       fi
     fi
 
-    echo 'INFO: Anaconda installation completed.'
+    echo 'INFO: Miniconda installation completed.'
   fi
 
   return 0
@@ -483,8 +483,8 @@ check_deps_riot() {
   conda_find_env "$CONDA_ENV_NAME"
   if [ $? -ne 0 ]; then
 
-    if ! prompt_boolean "PROMPT: Anaconda environment '$CONDA_ENV_NAME' not created. Create?"; then
-      echo 'ERROR: Anaconda environment '$CONDA_ENV_NAME' not created.'
+    if ! prompt_boolean "PROMPT: Miniconda environment '$CONDA_ENV_NAME' not created. Create?"; then
+      echo 'ERROR: Miniconda environment '$CONDA_ENV_NAME' not created.'
       echo ''
       echo '        hint: Re-run this script with following commands:'
       echo ''
@@ -500,7 +500,7 @@ check_deps_riot() {
     conda create -n "$CONDA_ENV_NAME" python=3.8
 
     if [ $? -ne 0 ]; then
-      echo "ERROR: Anaconda environment '$CONDA_ENV_NAME' creation failed."
+      echo "ERROR: Miniconda environment '$CONDA_ENV_NAME' creation failed."
       echo ''
       echo '        hint: Check the error messages above.'
       echo '              You should create the environment manually:'
@@ -512,7 +512,7 @@ check_deps_riot() {
       return 50
     fi
 
-    echo "INFO: Anaconda environment '$CONDA_ENV_NAME' has been created."
+    echo "INFO: Miniconda environment '$CONDA_ENV_NAME' has been created."
 
     pip install psutil
 
@@ -716,8 +716,8 @@ check_deps_esp() {
   conda_find_env "$CONDA_ENV_NAME"
   if [ $? -ne 0 ]; then
 
-    if ! prompt_boolean "PROMPT: Anaconda environment '$CONDA_ENV_NAME' not created. Create?"; then
-      echo 'ERROR: Anaconda environment '$CONDA_ENV_NAME' not created.'
+    if ! prompt_boolean "PROMPT: Miniconda environment '$CONDA_ENV_NAME' not created. Create?"; then
+      echo 'ERROR: Miniconda environment '$CONDA_ENV_NAME' not created.'
       echo ''
       echo '        hint: Re-run this script with following commands:'
       echo ''
@@ -731,7 +731,7 @@ check_deps_esp() {
     conda create -n "$CONDA_ENV_NAME" python=3.11
 
     if [ $? -ne 0 ]; then
-      echo "ERROR: Anaconda environment '$CONDA_ENV_NAME' creation failed."
+      echo "ERROR: Miniconda environment '$CONDA_ENV_NAME' creation failed."
       echo ''
       echo '        hint: Check the error messages above.'
       echo '              You should create the environment manually:'
@@ -741,7 +741,7 @@ check_deps_esp() {
       return 78
     fi
 
-    echo "INFO: Anaconda environment '$CONDA_ENV_NAME' has been created."
+    echo "INFO: Miniconda environment '$CONDA_ENV_NAME' has been created."
   fi
 
   __expected_idf_tools_path="$IDF_TOOLS_PATH/idf-env.json"
@@ -799,7 +799,7 @@ activate_conda() {
   eval "$(conda shell.$SHELL_NAME hook)"
   conda activate "$__env_name"
   if [ $? -ne 0 ]; then
-    echo 'ERROR: Failed to activate Anaconda environment.'
+    echo 'ERROR: Failed to activate Miniconda environment.'
     echo ''
     echo '        hint: Check the error messages above.'
     echo '              You should verify if the environment can be activated manually:'
@@ -813,7 +813,7 @@ activate_conda() {
     return 101
   fi
 
-  echo "INFO: Anaconda environment '$__env_name' has been activated."
+  echo "INFO: Miniconda environment '$__env_name' has been activated."
   return 0
 }
 
