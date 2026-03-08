@@ -139,12 +139,14 @@ NAND flash development Git Submodules - ESP-IDF FreeRTOS based
     rm -rf ~/nand-base/esp/.espressif
     ```
 
-2. Remove Anaconda
+2. Remove Miniconda
 
-    *Reference: https://www.anaconda.com/docs/getting-started/anaconda/uninstall*
+    **This will remove all other Miniconda environments.**
+
+    *Reference: https://www.anaconda.com/docs/getting-started/miniconda/uninstall*
 
     ```bash
-    rm -rf ~/anaconda3
+    rm -rf ~/miniconda3
     rm -rf ~/.condarc ~/.conda ~/.continuum
     ```
 
@@ -157,7 +159,7 @@ NAND flash development Git Submodules - ESP-IDF FreeRTOS based
     * `export PATH="$HOME/nand-base/bin:$PATH"`
     * `export IDF_TOOLS_PATH="$HOME/nand-base/esp/.espressif"`
     * `. "$HOME/nand-base/esp/esp-idf/export.sh" > /dev/null 2>&1`
-    * The lines between `# >>> conta initialize >>>` and `# <<< conda initialize <<<`
+    * The lines between `# >>> conda initialize >>>` and `# <<< conda initialize <<<`
 
 4. Remove this repository located at `~/nand-base`
 

@@ -47,14 +47,14 @@ NAND flash development Git Submodules
     rm -rf ~/nand-base
     ```
 
-3. Remove Anaconda
+3. Remove Miniconda
 
-    **This will remove all other Anaconda environments.**
+    **This will remove all other Miniconda environments.**
 
-    *Reference: https://www.anaconda.com/docs/getting-started/anaconda/uninstall*
+    *Reference: https://www.anaconda.com/docs/getting-started/miniconda/uninstall*
 
     ```bash
-    rm -rf ~/anaconda3
+    rm -rf ~/miniconda3
     rm -rf ~/.condarc ~/.conda ~/.continuum
     ```
 
@@ -65,4 +65,4 @@ NAND flash development Git Submodules
     This guide may have added the following lines into `.bashrc`:
 
     * `export PATH="$HOME/nand-base/bin:$PATH"`
-    * The lines between `# >>> conta initialize >>>` and `# <<< conda initialize <<<`
+    * The lines between `# >>> conda initialize >>>` and `# <<< conda initialize <<<`

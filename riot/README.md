@@ -199,12 +199,14 @@ NAND flash development Git Submodules - RIOT based
     rm -rf ~/nand-base/riot/.espressif
     ```
 
-2. Remove Anaconda
+2. Remove Miniconda
 
-    *Reference: https://www.anaconda.com/docs/getting-started/anaconda/uninstall*
+    **This will remove all other Miniconda environments.**
+
+    *Reference: https://www.anaconda.com/docs/getting-started/miniconda/uninstall*
 
     ```bash
-    rm -rf ~/anaconda3
+    rm -rf ~/miniconda3
     rm -rf ~/.condarc ~/.conda ~/.continuum
     ```
 
@@ -219,7 +221,7 @@ NAND flash development Git Submodules - RIOT based
     * `export IDF_TOOLS_PATH="$HOME/nand-base/riot/.espressif"`
     * `. "$RIOTBASE/dist/tools/esptools/export.sh" esp32s3 > /dev/null`
     * `. "$HOME/nand-base/riot/esp-idf/export.sh" > /dev/null 2>&1`
-    * The lines between `# >>> conta initialize >>>` and `# <<< conda initialize <<<`
+    * The lines between `# >>> conda initialize >>>` and `# <<< conda initialize <<<`
 
 4. Remove this repository located at `~/nand-base`
 
