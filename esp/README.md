@@ -17,7 +17,7 @@ NAND flash development Git Submodules - ESP-IDF FreeRTOS based
 2. Set the environmental variables
 
     ```bash
-    echo 'export PATH="~/nand-base/bin:$PATH"' >> ~/.bashrc
+    echo 'export PATH="$HOME/nand-base/bin:$PATH"' >> ~/.bashrc
     ```
 
     *Restart the shell after this step.*
@@ -99,7 +99,7 @@ NAND flash development Git Submodules - ESP-IDF FreeRTOS based
 4. Set the desired ESP-IDF tools path to `~/.bashrc`
 
     ```bash
-    echo 'export IDF_TOOLS_PATH="~/nand-base/esp/.espressif"' >> ~/.bashrc
+    echo 'export IDF_TOOLS_PATH="$HOME/nand-base/esp/.espressif"' >> ~/.bashrc
     ```
 
     *Restart the shell after this step.*
@@ -154,8 +154,8 @@ NAND flash development Git Submodules - ESP-IDF FreeRTOS based
 
     This guide may ahve added the following lines into `.bashrc`:
 
-    * `export PATH="~/nand-base/bin:$PATH"`
-    * `export IDF_TOOLS_PATH="~/nand-base/esp/.espressif"`
+    * `export PATH="$HOME/nand-base/bin:$PATH"`
+    * `export IDF_TOOLS_PATH="$HOME/nand-base/esp/.espressif"`
     * `. "$HOME/nand-base/esp/esp-idf/export.sh" > /dev/null 2>&1`
     * The lines between `# >>> conta initialize >>>` and `# <<< conda initialize <<<`
 

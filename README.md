@@ -17,7 +17,7 @@ NAND flash development Git Submodules
 2. Set the environmental variables
 
     ```bash
-    echo 'export PATH="~/nand-base/bin:$PATH"' >> ~/.bashrc
+    echo 'export PATH="$HOME/nand-base/bin:$PATH"' >> ~/.bashrc
     ```
 
     *Restart the shell after this step.*
@@ -64,5 +64,5 @@ NAND flash development Git Submodules
 
     This guide may have added the following lines into `.bashrc`:
 
-    * `export PATH="~/nand-base/bin:$PATH"`
+    * `export PATH="$HOME/nand-base/bin:$PATH"`
     * The lines between `# >>> conta initialize >>>` and `# <<< conda initialize <<<`
